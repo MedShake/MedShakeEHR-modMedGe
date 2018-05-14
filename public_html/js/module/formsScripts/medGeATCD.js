@@ -1,7 +1,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
