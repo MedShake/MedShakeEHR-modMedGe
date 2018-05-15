@@ -11,7 +11,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='medGeCatDataConsult');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('medical', 'medGeSynthesePatient', 'synthèse sur la patient', 'Synthèse', 'synthèse patient', '', '', 'textarea', '', 'medge', @catID, 1, '2018-05-14 13:27:57', 3600, 1);
+('medical', 'medGeSynthesePatient', 'synthèse sur le patient', 'Synthèse', 'synthèse patient', '', '', 'textarea', '', 'medge', @catID, 1, '2018-05-14 13:27:57', 3600, 1);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='atcd');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES

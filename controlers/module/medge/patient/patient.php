@@ -70,9 +70,9 @@ $p['page']['formNameGynObsSyntheseGyn']=$formSynthese->setFormIDbyName('medGeSyn
 $formSynthese->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formSynthese']=$formSynthese->getForm();
 
-//types de consultation liées à la gynéco classique.
+//types de consultations classiques.
 $typeCsCla=new msData;
-// $p['page']['typeCsCla']=$typeCsCla->getDataTypesFromCatName('csGyneco', array('id','label', 'formValues'));
+$p['page']['typeCsCla']=$typeCsCla->getDataTypesFromCatName('medGeCatConsultAdulte', array('id','label', 'formValues'));
 
 
 //chercher une grossesse en cours
@@ -97,7 +97,7 @@ if ($findGro=msSQL::sqlUnique("select pd.id as idGro, eg.id as idFin
 
         //types de consultation liées à la grossesse.
         $typeCsGro=new msData;
-        $p['page']['typeCsGro']=$typeCsGro->getDataTypesFromCatName('csObs', array('id','label','formValues'));
+        $p['page']['typeCsGro']=$typeCsGro->getDataTypesFromCatName('medGeCatConsultObs', array('id','label','formValues'));
     }
 }
 
