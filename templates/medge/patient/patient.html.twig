@@ -36,7 +36,7 @@
   {# variables JS embarquées #}
   {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
   <script>
-    var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
+    var dicomAutoSendPatient = {{ config.dicomAutoSendPatient }};
 
     {% if config.utiliserLap == 'true' %}
       lapAlertPatientTermeGrossesseSup46 = {{ config.lapAlertPatientTermeGrossesseSup46 }};

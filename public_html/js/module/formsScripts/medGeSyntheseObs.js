@@ -41,8 +41,8 @@ $(document).ready(function() {
     calcAndDisplayTdj();
     calcAndDisplayDdgt();
     calcAndDisplayT9m();
-    if (typeof(dicomAutoSendPatient2Echo) != "undefined") {
-      if (dicomAutoSendPatient2Echo == true) {
+    if (typeof(dicomAutoSendPatient) != "undefined") {
+      if (dicomAutoSendPatient == true) {
         prepareEcho('nopopup');
       }
     }
@@ -53,8 +53,8 @@ $(document).ready(function() {
   $("#before_ddgReel").on("dp.change", function(e) {
     calcAndDisplayTdj();
     calcAndDisplayT9m();
-    if (typeof(dicomAutoSendPatient2Echo) != "undefined") {
-      if (dicomAutoSendPatient2Echo == true) {
+    if (typeof(dicomAutoSendPatient) != "undefined") {
+      if (dicomAutoSendPatient == true) {
         prepareEcho('nopopup');
       }
     }
