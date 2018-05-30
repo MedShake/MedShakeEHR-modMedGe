@@ -73,6 +73,8 @@ $p['page']['formSynthese']=$formSynthese->getForm();
 //types de consultations classiques.
 $typeCsCla=new msData;
 $p['page']['typeCsCla']=$typeCsCla->getDataTypesFromCatName('medGeCatConsultAdulte', array('id','label', 'formValues'));
+$p['page']['typeCsDiv']=$typeCsCla->getDataTypesFromCatName('medGeCatConsultDiverses', array('id','label', 'formValues'));
+$p['page']['typeCsPedia']=$typeCsCla->getDataTypesFromCatName('medGeCatConsultPedia', array('id','label', 'formValues'));
 
 
 //chercher une grossesse en cours

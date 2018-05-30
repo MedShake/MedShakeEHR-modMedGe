@@ -31,8 +31,25 @@
     <div class="jumbotron col-md-12">
         {{ f.formbuilder(page.formSynthese , 'gynObsSyntheseGyn' ) }}
         {% for v in page.typeCsCla %}
-            <button type="button" class="btn btn-success btn-sm addNewCS" style="margin-bottom : 3px;" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
+            <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
         {% endfor %}
+
+        {% for v in page.typeCsDiv %}
+            <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
+        {% endfor %}
+
+        <div class="btn-group">
+          <button class="btn btn-success btn-sm dropdown-toggle mb-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Examens pédiatriques
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for v in page.typeCsPedia %}
+                <a href="#" class="dropdown-item addNewCS" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</a>
+            {% endfor %}
+          </div>
+        </div>
+
+
 
         {% if page.grossesseEnCours.id == '' and page.patient.administrativeDatas.birthdate.age|number_format < 60 and page.patient.administrativeDatas.birthdate.age|number_format > 15 and page.patient.administrativeDatas.administrativeGenderCode.value == 'F' %}
             <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/module/actions/installNewGro/{{ page.patient.id }}/" role="button" class="btn btn-info btn-sm float-right m-1 newGro">Nouvelle grossesse</a>
