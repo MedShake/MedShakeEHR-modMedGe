@@ -1,0 +1,96 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : medge Pédiatrie, examen des 9 mois
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+<h2 style="text-align : center">Examen au cours du 9e mois</h2>
+
+<h3>Biométrie</h3>
+<div class="row">
+<div class="t9 col-6">
+Poids : {{ tag.poids }} kg &nbsp;&nbsp;&nbsp;&nbsp;Taille : {{ tag.taillePatient }} cm &nbsp;&nbsp;&nbsp;&nbsp;PC : {{ tag.perimetreCranien }} cm
+</div><div class="t9 col-6">
+Risque de saturnisme : {% if tag.val_medGeCsPed9MRisqueSaturnisme == "n" %}non{% elseif tag.val_medGeCsPed9MRisqueSaturnisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div>
+</div>
+<hr>
+<h3>Vision</h3>
+<div class="row">
+<div class="t9 col-6">
+Cornées transparentes : {% if tag.val_medGeCsPed9MCornees == "n" %}non{% elseif tag.val_medGeCsPed9MCornees == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Pupilles normales : {% if tag.val_medGeCsPed9MPupillesNormales == "n" %}non{% elseif tag.val_medGeCsPed9MPupillesNormales == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Lueurs pupillaires présentes : {% if tag.val_medGeCsPed9MLueursPupi == "n" %}non{% elseif tag.val_medGeCsPed9MLueursPupi == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+<div class="t9 col-6">
+Strabisme : {% if tag.val_medGeCsPed9MStrabisme == "n" %}non{% elseif tag.val_medGeCsPed9MStrabisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si strabisme, pris en charge : {% if tag.val_medGeCsPed9MStrabismePriseEnCh == "n" %}non{% elseif tag.val_medGeCsPed9MStrabismePriseEnCh == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Poursuite oculaire normale : {% if tag.val_medGeCsPed9MPoursuiteOculaire == "n" %}non{% elseif tag.val_medGeCsPed9MPoursuiteOculaire == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Audition</h3>
+<div class="row">
+<div class="t9 col-6">
+Se retourne sur un bruit produit hors de sa vue : {% if tag.val_medGeCsPed9MSeRetourneSurBruit == "n" %}non{% elseif tag.val_medGeCsPed9MSeRetourneSurBruit == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Tympans normaux :<br>
+- à gauche : {% if tag.val_medGeCsPed9MTympanG == "n" %}non{% elseif tag.val_medGeCsPed9MTympanG == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- à droite : {% if tag.val_medGeCsPed9MTympanD == "n" %}non{% elseif tag.val_medGeCsPed9MTympanD == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+<div class="t9 col-6">
+Un test d’audiologie quantitative a-t-il été pratiqué ? : {% if tag.val_medGeCsPed9MTestAudioFait == "n" %}non{% elseif tag.val_medGeCsPed9MTestAudioFait == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test utilisé : {{ tag.medGeCsPed9MTestAudioUtilise }}<br>
+Résultat du test : {% if tag.val_medGeCsPed9MTestAudioResult == "normal" %}normal{% elseif tag.val_medGeCsPed9MTestAudioResult == "refaire" %}à refaire{% elseif tag.val_medGeCsPed9MTestAudioResult == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Développement</h3>
+<div class="row">
+<div class="t9 col-6">
+Tient assis sans appui : {% if tag.val_medGeCsPed9MTientAssis == "n" %}non{% elseif tag.val_medGeCsPed9MTientAssis == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Motricité symétrique des quatre membres : {% if tag.val_medGeCsPed9MMotriciteSym == "n" %}non{% elseif tag.val_medGeCsPed9MMotriciteSym == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Se déplace : {% if tag.val_medGeCsPed9MSeDeplace == "n" %}non{% elseif tag.val_medGeCsPed9MSeDeplace == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Saisit un objet avec la participation du pouce : {% if tag.val_medGeCsPed9MSaisitObjetPouce == "n" %}non{% elseif tag.val_medGeCsPed9MSaisitObjetPouce == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+<div class="t9 col-6">
+Imite un geste simple (au revoir/bravo) : {% if tag.val_medGeCsPed9MImite == "n" %}non{% elseif tag.val_medGeCsPed9MImite == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Réagit à son prénom : {% if tag.val_medGeCsPed9MReagitPrenom == "n" %}non{% elseif tag.val_medGeCsPed9MReagitPrenom == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Répète une syllabe : {% if tag.val_medGeCsPed9MRepeteSyllabe == "n" %}non{% elseif tag.val_medGeCsPed9MRepeteSyllabe == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Bonne qualité du sommeil : {% if tag.val_medGeCsPed9MQualiteSommeil == "n" %}non{% elseif tag.val_medGeCsPed9MQualiteSommeil == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Synthèse</h3>
+<div class="row">
+<div class="t9 col">
+<p>Examen somatique et synthèse de la consultation :<br>{{ tag.medGeCsPed9MSynthese|nl2br }}</p>
+</div>
+</div>

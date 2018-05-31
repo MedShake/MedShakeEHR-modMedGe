@@ -1,0 +1,94 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : medge Pédiatrie, examen des 24 mois
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+<h2 style="text-align : center">Examen au cours du 24e mois</h2>
+
+<h3>Biométrie</h3>
+<div class="row">
+<div class="t9 col-6">
+Poids : {{ tag.poids }} kg &nbsp;&nbsp;&nbsp;Taille : {{ tag.taillePatient }} cm &nbsp;&nbsp;&nbsp;IMC : {{ tag.imc }} &nbsp;&nbsp;&nbsp;PC : {{ tag.perimetreCranien }} cm
+</div><div class="t9 col-6">
+Risque de saturnisme : {% if tag.val_medGeCsPed24MRisqueSaturnisme == "n" %}non{% elseif tag.val_medGeCsPed24MRisqueSaturnisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div>
+</div>
+<hr>
+<h3>Vision</h3>
+<div class="row">
+<div class="t9 col-6">
+Cornées transparentes : {% if tag.val_medGeCsPed24MCornees == "n" %}non{% elseif tag.val_medGeCsPed24MCornees == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Pupilles normales : {% if tag.val_medGeCsPed24MPupillesNormales == "n" %}non{% elseif tag.val_medGeCsPed24MPupillesNormales == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Poursuite oculaire normale : {% if tag.val_medGeCsPed24MPoursuiteOculaire == "n" %}non{% elseif tag.val_medGeCsPed24MPoursuiteOculaire == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Strabisme : {% if tag.val_medGeCsPed24MStrabisme == "n" %}non{% elseif tag.val_medGeCsPed24MStrabisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si strabisme, pris en charge : {% if tag.val_medGeCsPed24MStrabismePriseEnCh == "n" %}non{% elseif tag.val_medGeCsPed24MStrabismePriseEnCh == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Audition</h3>
+<div class="row">
+<div class="t9 col-6">
+Tympans normaux :<br>
+- à gauche : {% if tag.val_medGeCsPed24MTympanG == "n" %}non{% elseif tag.val_medGeCsPed24MTympanG == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- à droite : {% if tag.val_medGeCsPed24MTympanD == "n" %}non{% elseif tag.val_medGeCsPed24MTympanD == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test à voix normale : {% if tag.val_medGeCsPed24MTestVoie == "n" %}non{% elseif tag.val_medGeCsPed24MTestVoie == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Résultat du test : {% if tag.val_medGeCsPed24MTestVoieResultat == "normal" %}normal{% elseif tag.val_medGeCsPed24MTestVoieResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed24MTestVoieResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Un test d’audiologie quantitative a-t-il été pratiqué ? : {% if tag.val_medGeCsPed24MTestAudioFait == "n" %}non{% elseif tag.val_medGeCsPed24MTestAudioFait == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test utilisé : {{ tag.medGeCsPed24MTestAudioUtilise }}<br>
+Résultat du test : {% if tag.val_medGeCsPed24MTestAudioResult == "normal" %}normal{% elseif tag.val_medGeCsPed24MTestAudioResult == "refaire" %}à refaire{% elseif tag.val_medGeCsPed24MTestAudioResult == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Développement</h3>
+<div class="row">
+<div class="t9 col-6">
+Marche acquise : {% if tag.val_medGeCsPed24MMarcheAcquise == "n" %}non{% elseif tag.val_medGeCsPed24MMarcheAcquise == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si oui, à quel age ? : {{ tag.medGeCsPed24MMarcheAcquiseAge }} mois<br>
+Associe deux mots : {% if tag.val_medGeCsPed24MAssocie2Mots == "n" %}non{% elseif tag.val_medGeCsPed24MAssocie2Mots == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Comprend une consigne simple : {% if tag.val_medGeCsPed24MComprendConsigneSimple == "n" %}non{% elseif tag.val_medGeCsPed24MComprendConsigneSimple == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Pointe du doigt : {% if tag.val_medGeCsPed24MPointeDuDoigt == "n" %}non{% elseif tag.val_medGeCsPed24MPointeDuDoigt == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Nomme au moins une image : {% if tag.val_medGeCsPed24MNommeImage == "n" %}non{% elseif tag.val_medGeCsPed24MNommeImage == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Sollicite un adulte / une autre personne : {% if tag.val_medGeCsPed24MSolliciteTiers == "n" %}non{% elseif tag.val_medGeCsPed24MSolliciteTiers == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Superpose des objets : {% if tag.val_medGeCsPed24MSuperposeObjets == "n" %}non{% elseif tag.val_medGeCsPed24MSuperposeObjets == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Joue à faire semblant : {% if tag.val_medGeCsPed24MJoueFaireSemblant == "n" %}non{% elseif tag.val_medGeCsPed24MJoueFaireSemblant == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Synthèse</h3>
+<div class="row">
+<div class="t9 col-6">
+<p>Examen somatique et synthèse de la consultation :<br>{{ tag.medGeCsPed24MSynthese|nl2br }}</p>
+</div>
+</div>

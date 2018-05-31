@@ -1,0 +1,82 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : medge Pédiatrie, examen des 2 mois
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+<h2 style="text-align : center">Examen au cours du 2e mois</h2>
+
+<h3>Biométrie</h3>
+<div class="row">
+<div class="t9 col">
+Poids : {{ tag.poids }} kg &nbsp;&nbsp;&nbsp;&nbsp;Taille : {{ tag.taillePatient }} cm &nbsp;&nbsp;&nbsp;&nbsp;PC : {{ tag.perimetreCranien }} cm
+</div></div>
+<hr>
+<h3>Vision</h3>
+<div class="row">
+<div class="t9 col-6">
+Cornées transparentes : {% if tag.val_medGeCsPed2MCornees == "n" %}non{% elseif tag.val_medGeCsPed2MCornees == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Globes oculaires de taille normale : {% if tag.val_medGeCsPed2MGlobesTaille == "n" %}non{% elseif tag.val_medGeCsPed2MGlobesTaille == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Pupilles normales : {% if tag.val_medGeCsPed2MPupillesNormales == "n" %}non{% elseif tag.val_medGeCsPed2MPupillesNormales == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Lueurs pupillaires présentes : {% if tag.val_medGeCsPed2MLueursPupi == "n" %}non{% elseif tag.val_medGeCsPed2MLueursPupi == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Strabisme : {% if tag.val_medGeCsPed2MStrabisme == "n" %}non{% elseif tag.val_medGeCsPed2MStrabisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si strabisme, pris en charge : {% if tag.val_medGeCsPed2MStrabismePriseEnCh == "n" %}non{% elseif tag.val_medGeCsPed2MStrabismePriseEnCh == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Poursuite oculaire normale : {% if tag.val_medGeCsPed2MPoursuiteOculaire == "n" %}non{% elseif tag.val_medGeCsPed2MPoursuiteOculaire == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Audition</h3>
+<div class="row">
+<div class="t9 col">
+Réagit : sursaute, arrête son activité :<br>
+- à la voix : {% if tag.val_medGeCsPed2MSursauteVoix == "n" %}non{% elseif tag.val_medGeCsPed2MSursauteVoix == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- au bruit : {% if tag.val_medGeCsPed2MSursauteBruit == "n" %}non{% elseif tag.val_medGeCsPed2MSursauteBruit == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Développement</h3>
+<div class="row">
+<div class="t9 col-6">
+Sourire réponse : {% if tag.val_medGeCsPed2MSourireReponse == "n" %}non{% elseif tag.val_medGeCsPed2MSourireReponse == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Bouge vigoureusement les 4 membres de manière symétrique : {% if tag.val_medGeCsPed2MBougeVigou == "n" %}non{% elseif tag.val_medGeCsPed2MBougeVigou == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div><div class="t9 col-6">
+Suit des yeux : {% if tag.val_medGeCsPed2MSuitDesYeux == "n" %}non{% elseif tag.val_medGeCsPed2MSuitDesYeux == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Émet une réponse vocale à une sollicitation : {% if tag.val_medGeCsPed2MReponseVocale == "n" %}non{% elseif tag.val_medGeCsPed2MReponseVocale == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Sur le ventre, soulève tête et épaules : {% if tag.val_medGeCsPed2MSurLeVentre == "n" %}non{% elseif tag.val_medGeCsPed2MSurLeVentre == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div>
+</div>
+<hr>
+<h3>Synthèse</h3>
+<div class="row">
+<div class="t9 col">
+<p>Examen somatique et synthèse de la consultation :<br>{{ tag.medGeCsPed2MSynthese|nl2br }}</p>
+</div></div>

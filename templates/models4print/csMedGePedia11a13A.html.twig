@@ -1,0 +1,171 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : medge Pédiatrie, examen entre 8 et 9 ans
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+<h2 style="text-align : center">Examen entre 11 et 13 ans</h2>
+
+<h3>Biométrie</h3>
+<div class="row">
+<div class="t9 col">
+Poids : {{ tag.poids }} kg &nbsp;&nbsp;Taille : {{ tag.taillePatient }} cm &nbsp;&nbsp;IMC : {{ tag.imc }} &nbsp;&nbsp;&nbsp;Pression artérielle : {{ tag.taSystolique }} / {{ tag.taDiastolique }} mmHg
+</div>
+</div>
+<hr>
+<h3>Vision</h3>
+<div class="row">
+<div class="t9 col-6">
+L’enfant a-t-il une correction ? : {% if tag.val_medGeCsPed11ACorrectionOptique == "n" %}non{% elseif tag.val_medGeCsPed11ACorrectionOptique == "o" %}oui{% else %}- non renseigné -{% endif %}<br><br>
+Vision de près - test utilisé : {{ tag.medGeCsPed11ATestVisionPresUtilise }}<br>
+Résultat OG : {{ tag.medGeCsPed11AVisionPresROG }} &nbsp;&nbsp;
+Résultat OD : {{ tag.medGeCsPed11AVisionPresROD }}<br>
+Vision de loin - test utilisé : {{ tag.medGeCsPed11ATestVisionLoinUtilise }}<br>
+Résultat OG : {{ tag.medGeCsPed11AVisionLoinROG }} &nbsp;&nbsp;
+Résultat OD : {{ tag.medGeCsPed11AVisionLoinROD }}
+</div><div class="t9 col-6">
+Strabisme : {% if tag.val_medGeCsPed11AStrabisme == "n" %}non{% elseif tag.val_medGeCsPed11AStrabisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si strabisme, pris en charge : {% if tag.val_medGeCsPed11AStrabismePriseEnCh == "n" %}non{% elseif tag.val_medGeCsPed11AStrabismePriseEnCh == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Poursuite oculaire normale : {% if tag.val_medGeCsPed11APoursuiteOculaire == "n" %}non{% elseif tag.val_medGeCsPed11APoursuiteOculaire == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Tolère l’occlusion oculaire alternée : {% if tag.val_medGeCsPed11ATolereOcclusionOcAlter == "n" %}non{% elseif tag.val_medGeCsPed11ATolereOcclusionOcAlter == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test de vision stéréoscopique : {% if tag.val_medGeCsPed11ATestVisionStereo == "f" %}fait{% elseif tag.val_medGeCsPed11ATestVisionStereo == "nf" %}non fait{% else %}- non renseigné -{% endif %}<br>
+Résultat du test : {% if tag.val_medGeCsPed11ATestVisionStereoResultat == "normal" %}normal{% elseif tag.val_medGeCsPed11ATestVisionStereoResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed11ATestVisionStereoResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}<br>
+Test de vision des couleurs : {% if tag.val_medGeCsPed11ATestVisionCouleurs == "f" %}fait{% elseif tag.val_medGeCsPed11ATestVisionCouleurs == "nf" %}non fait{% else %}- non renseigné -{% endif %}<br>
+Résultat du test : {% if tag.val_medGeCsPed11ATestVisionCouleursResultat == "normal" %}normal{% elseif tag.val_medGeCsPed11ATestVisionCouleursResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed11ATestVisionCouleursResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Audition</h3>
+<div class="row">
+<div class="t9 col-6">
+Tympans normaux :<br>
+- à gauche : {% if tag.val_medGeCsPed11ATympanG == "n" %}non{% elseif tag.val_medGeCsPed11ATympanG == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- à droite : {% if tag.val_medGeCsPed11ATympanD == "n" %}non{% elseif tag.val_medGeCsPed11ATympanD == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test auditif - test utilisé : {{ tag.medGeCsPed11ATestAuditifUtilise }}<br>
+Résultat du test : {% if tag.val_medGeCsPed11ATestAuditifResultat == "normal" %}normal{% elseif tag.val_medGeCsPed11ATestAuditifResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed11ATestAuditifResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}<br>
+</div><div class="t9 col-6">
+  <table>
+    <thead>
+     <tr>
+       <td>Fréquence</td>
+       <td class="centrer">500 Hz</td>
+       <td class="centrer">1000 Hz</td>
+       <td class="centrer">2000 Hz</td>
+       <td class="centrer">4000 Hz</td>
+       <td class="centrer">8000 Hz</td>
+     </tr>
+   </thead>
+   <tbody>
+      <tr>
+        <td>oreille droite</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOd500 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOd1000 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOd2000 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOd4000 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOd8000 == 'true' %}x{% endif %}</td>
+        </tr>
+      <tr>
+        <td>oreille gauche</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOg500 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOg1000 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOg2000 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOg4000 == 'true' %}x{% endif %}</td>
+        <td class="centrer">{% if tag.medGeCsPed11AFqOgd8000 == 'true' %}x{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+
+Résultat du test : {% if tag.val_medGeCsPed11ATestAuditifFqResultat == "normal" %}normal{% elseif tag.val_medGeCsPed11ATestAuditifFqResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed11ATestAuditifFqResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}<br>
+</div>
+</div>
+<hr>
+<h3>Développement</h3>
+<div class="row">
+<div class="t9 col-6">
+Orientation spatiale :<br>
+- sur autrui : {% if tag.val_medGeCsPed11AOrientationSpaSurAutrui == "n" %}non{% elseif tag.val_medGeCsPed11AOrientationSpaSurAutrui == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- sur un objet : {% if tag.val_medGeCsPed11AOrientationSpaSurObjet == "n" %}non{% elseif tag.val_medGeCsPed11AOrientationSpaSurObjet == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Troubles de l’équilibre : {% if tag.val_medGeCsPed11ATroubleEquilibre == "n" %}non{% elseif tag.val_medGeCsPed11ATroubleEquilibre == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test à l’effort : {% if tag.val_medGeCsPed11ATestEffort == "f" %}fait{% elseif tag.val_medGeCsPed11ATestEffort == "nf" %}non fait{% else %}- non renseigné -{% endif %}<br>
+Test utilisé : {{ tag.medGeCsPed11ATestEffortUtilise }}<br>
+Résultat du test : {% if tag.val_medGeCsPed11ATestEffortResultat == "normal" %}normal{% elseif tag.val_medGeCsPed11ATestEffortResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed11ATestEffortResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}<br>
+Troubles du sommeil : {% if tag.val_medGeCsPed11ATroubleSommeil == "n" %}non{% elseif tag.val_medGeCsPed11ATroubleSommeil == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Plaintes somatiques fréquentes : {% if tag.val_medGeCsPed11APlaintesSomatiquesFqtes == "n" %}non{% elseif tag.val_medGeCsPed11APlaintesSomatiquesFqtes == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div><div class="t9 col-6">
+Évoque son passé : {% if tag.val_medGeCsPed11AEvoquePasse == "n" %}non{% elseif tag.val_medGeCsPed11AEvoquePasse == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Établit des projets : {% if tag.val_medGeCsPed11AEtablitProjet == "n" %}non{% elseif tag.val_medGeCsPed11AEtablitProjet == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Trouble du langage connu ou suspecté : {% if tag.val_medGeCsPed11ATroubleLanguageConnuSupecte == "n" %}non{% elseif tag.val_medGeCsPed11ATroubleLanguageConnuSupecte == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si oui, pris en charge : {% if tag.val_medGeCsPed11ATroubleLanguageConnuSupectePeC == "n" %}non{% elseif tag.val_medGeCsPed11ATroubleLanguageConnuSupectePeC == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Latéralité :<br>
+main : {% if tag.val_medGeCsPed11ALateraliteMain == "z" %}{% elseif tag.val_medGeCsPed11ALateraliteMain == "d" %}droite{% elseif tag.val_medGeCsPed11ALateraliteMain == "g" %}gauche{% elseif tag.val_medGeCsPed11ALateraliteMain == "nf" %}non fixée{% else %}- non renseigné -{% endif %}&nbsp;&nbsp;&nbsp;
+oeil : {% if tag.val_medGeCsPed11ALateraliteOeil == "z" %}{% elseif tag.val_medGeCsPed11ALateraliteOeil == "d" %}droite{% elseif tag.val_medGeCsPed11ALateraliteOeil == "g" %}gauche{% elseif tag.val_medGeCsPed11ALateraliteOeil == "nf" %}non fixée{% else %}- non renseigné -{% endif %}&nbsp;&nbsp;&nbsp;
+pied : {% if tag.val_medGeCsPed11ALateralitePied == "z" %}{% elseif tag.val_medGeCsPed11ALateralitePied == "d" %}droite{% elseif tag.val_medGeCsPed11ALateralitePied == "g" %}gauche{% elseif tag.val_medGeCsPed11ALateralitePied == "nf" %}non fixée{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Autres éléments et synthèse</h3>
+<div class="row">
+<div class="t9 col">
+Dents cariées soignées : {{ tag.medGeCsPed11ADentsCarieesSoignees }} &nbsp;&nbsp;&nbsp;
+cariées non soignées : {{ tag.medGeCsPed11ADentsCarieesNonSoignees }} &nbsp;&nbsp;&nbsp;
+absentes : {{ tag.medGeCsPed11ADentsAbsentes }} &nbsp;&nbsp;&nbsp;
+traumatisées : {{ tag.medGeCsPed11ADentsTraumatisees }}<br>
+Brossage des dents suffisant : {% if tag.val_medGeCsPed11ABrossageDetsSuffisant == "n" %}non{% elseif tag.val_medGeCsPed11ABrossageDetsSuffisant == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Conseils d’hygiène dentaire donnés : {% if tag.val_medGeCsPed11AConseilsHygieneDentaire == "n" %}non{% elseif tag.val_medGeCsPed11AConseilsHygieneDentaire == "o" %}oui{% else %}- non renseigné -{% endif %}<br><br>
+Examen de la peau :<br>
+<div class="row">
+<div class="t9 col-6">
+Acné :<br>{{ tag.medGeCsPed11AAcne|nl2br }}<br><br>
+Nombre de naevi : {{ tag.medGeCsPed11ANbDeNaevi }}
+</div><div class="t9 col-6">
+Autre :<br>{{ tag.medGeCsPed11APeau|nl2br }}
+</div></div>
+Conseils d’hygiène cutanée donnés : {% if tag.val_medGeCsPed11AConseilsHygieneCutane == "n" %}non{% elseif tag.val_medGeCsPed11AConseilsHygieneCutane == "o" %}oui{% else %}- non renseigné -{% endif %}<br><br>
+Statique vertébrale :<br>
+- scoliose : {% if tag.val_medGeCsPed11AStatiqueVertebraleScoliose == "n" %}non{% elseif tag.val_medGeCsPed11AStatiqueVertebraleScoliose == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- autres anomalies de la statique vertébrale :<br>{{ tag.medGeCsPed11AStatiqueVertebraleAutres|nl2br }}<br><br>
+
+{% if tag.val_administrativeGenderCode == 'F' %}
+Stade de maturation pubertaire (stade de Tanner) :<br>
+S1 à S5 : {{ tag.medGeCsPed11AMaturPuberFS }} &nbsp;&nbsp;&nbsp;
+P1 à P5 : {{ tag.medGeCsPed11AMaturPuberFP }}<br>
+Règles : {% if tag.val_medGeCsPed11ARegles == "n" %}non{% elseif tag.val_medGeCsPed11ARegles == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Date des premières règles : {{ tag.medGeCsPed11AReglesDPR }}<br><br>
+{% else %}
+Stade de maturation pubertaire (stade de Tanner) :<br>
+G1 à G5 : {{ tag.medGeCsPed11AMaturPuberGG }} &nbsp;&nbsp;&nbsp;
+P1 à P5 : {{ tag.medGeCsPed11AMaturPuberGP }}<br>
+{% endif %}
+
+
+<p>Examen somatique et synthèse de la consultation :<br>{{ tag.medGeCsPed11ASynthese|nl2br }}</p>
+</div>
+</div>

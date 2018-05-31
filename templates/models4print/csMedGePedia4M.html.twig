@@ -1,0 +1,89 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : medge Pédiatrie, examen des 4 mois
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+<h2 style="text-align : center">Examen au cours du 4e mois</h2>
+
+<h3>Biométrie</h3>
+<div class="row">
+<div class="t9 col">
+Poids : {{ tag.poids }} kg &nbsp;&nbsp;&nbsp;&nbsp;Taille : {{ tag.taillePatient }} cm &nbsp;&nbsp;&nbsp;&nbsp;PC : {{ tag.perimetreCranien }} cm
+</div></div>
+<hr>
+<h3>Vision</h3>
+<div class="row">
+<div class="t9 col-6">
+Cornées transparentes : {% if tag.val_medGeCsPed4MCornees == "n" %}non{% elseif tag.val_medGeCsPed4MCornees == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Globes oculaires de taille normale : {% if tag.val_medGeCsPed4MGlobesTaille == "n" %}non{% elseif tag.val_medGeCsPed4MGlobesTaille == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Pupilles normales : {% if tag.val_medGeCsPed4MPupillesNormales == "n" %}non{% elseif tag.val_medGeCsPed4MPupillesNormales == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Lueurs pupillaires présentes : {% if tag.val_medGeCsPed4MLueursPupi == "n" %}non{% elseif tag.val_medGeCsPed4MLueursPupi == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div><div class="t9 col-6">
+Strabisme : {% if tag.val_medGeCsPed4MStrabisme == "n" %}non{% elseif tag.val_medGeCsPed4MStrabisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si strabisme, pris en charge : {% if tag.val_medGeCsPed4MStrabismePriseEnCh == "n" %}non{% elseif tag.val_medGeCsPed4MStrabismePriseEnCh == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Poursuite oculaire normale : {% if tag.val_medGeCsPed4MPoursuiteOculaire == "n" %}non{% elseif tag.val_medGeCsPed4MPoursuiteOculaire == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Audition</h3>
+<div class="row">
+<div class="t9 col">
+Réagit : sursaute, arrête son activité :<br>
+- à la voix : {% if tag.val_medGeCsPed4MSursauteVoix == "n" %}non{% elseif tag.val_medGeCsPed4MSursauteVoix == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- au bruit : {% if tag.val_medGeCsPed4MSursauteBruit == "n" %}non{% elseif tag.val_medGeCsPed4MSursauteBruit == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Développement</h3>
+<div class="row">
+<div class="t9 col-6">
+Maintenu assis, tient sa tête droite : {% if tag.val_medGeCsPed4MAssisTeteDroite == "n" %}non{% elseif tag.val_medGeCsPed4MAssisTeteDroite == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Joue avec les mains : {% if tag.val_medGeCsPed4MJoueAvecMain == "n" %}non{% elseif tag.val_medGeCsPed4MJoueAvecMain == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Tourne la tête pour suivre un objet : {% if tag.val_medGeCsPed4MTourneTeteSuivreObjet == "n" %}non{% elseif tag.val_medGeCsPed4MTourneTeteSuivreObjet == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Attrape un objet qui lui est tendu : {% if tag.val_medGeCsPed4MAttrapeObjetTendu == "n" %}non{% elseif tag.val_medGeCsPed4MAttrapeObjetTendu == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Sur le ventre,<br>
+- soulève tête et épaules : {% if tag.val_medGeCsPed4MSurLeVentreSoulTeteEpaules == "n" %}non{% elseif tag.val_medGeCsPed4MSurLeVentreSoulTeteEpaules == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- s’appuie sur les avant-bras : {% if tag.val_medGeCsPed4MSurLeVentreAppuieAvBras == "n" %}non{% elseif tag.val_medGeCsPed4MSurLeVentreAppuieAvBras == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div><div class="t9 col-6">
+Vocalise : {% if tag.val_medGeCsPed4MVocalise == "n" %}non{% elseif tag.val_medGeCsPed4MVocalise == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Sourire réponse : {% if tag.val_medGeCsPed4MSourireReponse == "n" %}non{% elseif tag.val_medGeCsPed4MSourireReponse == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Rit aux éclats : {% if tag.val_medGeCsPed4MRitEclats == "n" %}non{% elseif tag.val_medGeCsPed4MRitEclats == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Bouge vigoureusement les 4 membres de manière symétrique : {% if tag.val_medGeCsPed4MBougeVigou == "n" %}non{% elseif tag.val_medGeCsPed4MBougeVigou == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div>
+</div>
+<hr>
+<h3>Synthèse</h3>
+<div class="row">
+<div class="t9 col">
+<p>Examen somatique et synthèse de la consultation :<br>{{ tag.medGeCsPed4MSynthese|nl2br }}</p>
+</div>
+</div>

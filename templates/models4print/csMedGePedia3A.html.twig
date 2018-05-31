@@ -1,0 +1,115 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : medge Pédiatrie, examen des 3 ans
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+<h2 style="text-align : center">Examen au cours de la 3e année</h2>
+
+<h3>Biométrie</h3>
+<div class="row">
+<div class="t9 col-6">
+Poids : {{ tag.poids }} kg &nbsp;&nbsp;&nbsp;Taille : {{ tag.taillePatient }} cm &nbsp;&nbsp;&nbsp;IMC : {{ tag.imc }} &nbsp;&nbsp;&nbsp;PC : {{ tag.perimetreCranien }} cm
+</div><div class="t9 col-6">
+Risque de saturnisme : {% if tag.val_medGeCsPed3ARisqueSaturnisme == "n" %}non{% elseif tag.val_medGeCsPed3ARisqueSaturnisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+</div>
+</div>
+<hr>
+<h3>Vision</h3>
+<div class="row">
+<div class="t9 col-6">
+L’enfant a-t-il une correction ? : {% if tag.val_medGeCsPed3ACorrectionOptique == "n" %}non{% elseif tag.val_medGeCsPed3ACorrectionOptique == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Strabisme : {% if tag.val_medGeCsPed3AStrabisme == "n" %}non{% elseif tag.val_medGeCsPed3AStrabisme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Si strabisme, pris en charge : {% if tag.val_medGeCsPed3AStrabismePriseEnCh == "n" %}non{% elseif tag.val_medGeCsPed3AStrabismePriseEnCh == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Poursuite oculaire normale : {% if tag.val_medGeCsPed3APoursuiteOculaire == "n" %}non{% elseif tag.val_medGeCsPed3APoursuiteOculaire == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Tolère l’occlusion oculaire alternée : {% if tag.val_medGeCsPed3ATolereOcclusionOcAlter == "n" %}non{% elseif tag.val_medGeCsPed3ATolereOcclusionOcAlter == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test de vision stéréoscopique : {% if tag.val_medGeCsPed3ATestVisionStereo == "f" %}fait{% elseif tag.val_medGeCsPed3ATestVisionStereo == "nf" %}non fait{% else %}- non renseigné -{% endif %}<br>
+Résultat du test : {% if tag.val_medGeCsPed3ATestVisionStereoResultat == "normal" %}normal{% elseif tag.val_medGeCsPed3ATestVisionStereoResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed3ATestVisionStereoResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Mesure de l’acuité visuelle : <br>
+Vision de près - test utilisé : {{ tag.medGeCsPed3ATestVisionPresUtilise }}<br>
+Résultat OD : {{ tag.medGeCsPed3AVisionPresROD }} &nbsp;&nbsp;
+Résultat OG : {{ tag.medGeCsPed3AVisionPresROG }}<br>
+
+Vision de loin - test utilisé : {{ tag.medGeCsPed3ATestVisionLoinUtilise }}<br>
+Résultat OG : {{ tag.medGeCsPed3AVisionLoinROG }} &nbsp;&nbsp;
+Résultat OD : {{ tag.medGeCsPed3AVisionLoinROD }}
+</div>
+</div>
+<hr>
+<h3>Audition</h3>
+<div class="row">
+<div class="t9 col-6">
+Tympans normaux :<br>
+- à gauche : {% if tag.val_medGeCsPed3ATympanG == "n" %}non{% elseif tag.val_medGeCsPed3ATympanG == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+- à droite : {% if tag.val_medGeCsPed3ATympanD == "n" %}non{% elseif tag.val_medGeCsPed3ATympanD == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test à voix chuchotée : {% if tag.val_medGeCsPed3ATestVoieChucho == "nf" %}non fait{% elseif tag.val_medGeCsPed3ATestVoieChucho == "f" %}fait{% else %}- non renseigné -{% endif %}<br>
+Résultat du test : {% if tag.val_medGeCsPed3ATestVoieChuchoResultat == "normal" %}normal{% elseif tag.val_medGeCsPed3ATestVoieChuchoResultat == "refaire" %}à refaire{% elseif tag.val_medGeCsPed3ATestVoieChuchoResultat == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Un test d’audiologie quantitative a-t-il été pratiqué ? : {% if tag.val_medGeCsPed3ATestAudioFait == "n" %}non{% elseif tag.val_medGeCsPed3ATestAudioFait == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Test utilisé : {{ tag.medGeCsPed3ATestAudioUtilise }}<br>
+Résultat du test : {% if tag.val_medGeCsPed3ATestAudioResult == "normal" %}normal{% elseif tag.val_medGeCsPed3ATestAudioResult == "refaire" %}à refaire{% elseif tag.val_medGeCsPed3ATestAudioResult == "avisspe" %}avis spécialisé demandé{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Développement</h3>
+<div class="row">
+<div class="t9 col-6">
+Peut nommer trois couleurs : {% if tag.val_medGeCsPed3ANommer3couleurs == "n" %}non{% elseif tag.val_medGeCsPed3ANommer3couleurs == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Dit son nom : {% if tag.val_medGeCsPed3ADitSonNom == "n" %}non{% elseif tag.val_medGeCsPed3ADitSonNom == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Fait des phrases de trois mots : {% if tag.val_medGeCsPed3APhrase3Mots == "n" %}non{% elseif tag.val_medGeCsPed3APhrase3Mots == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Emploie des articles : {% if tag.val_medGeCsPed3AEmploieArticles == "n" %}non{% elseif tag.val_medGeCsPed3AEmploieArticles == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Utilise le « je » : {% if tag.val_medGeCsPed3AUtiliseJe == "n" %}non{% elseif tag.val_medGeCsPed3AUtiliseJe == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Comprend une consigne simple : {% if tag.val_medGeCsPed3AComprendConsigneSimple == "n" %}non{% elseif tag.val_medGeCsPed3AComprendConsigneSimple == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Copie un cercle fermé : {% if tag.val_medGeCsPed3ACopieCercleFerme == "n" %}non{% elseif tag.val_medGeCsPed3ACopieCercleFerme == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Fait un pont de trois cubes : {% if tag.val_medGeCsPed3APont3Cubes == "n" %}non{% elseif tag.val_medGeCsPed3APont3Cubes == "o" %}oui{% else %}- non renseigné -{% endif %}
+</div><div class="t9 col-6">
+Monte les escaliers en alternant les pied : {% if tag.val_medGeCsPed3AMonteEscaliersAlternant == "n" %}non{% elseif tag.val_medGeCsPed3AMonteEscaliersAlternant == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Mange seul : {% if tag.val_medGeCsPed3AMangeSeul == "n" %}non{% elseif tag.val_medGeCsPed3AMangeSeul == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+S’habille avec aide : {% if tag.val_medGeCsPed3AHabilleAide == "n" %}non{% elseif tag.val_medGeCsPed3AHabilleAide == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Propreté diurne acquise : {% if tag.val_medGeCsPed3APropreteDiurne == "n" %}non{% elseif tag.val_medGeCsPed3APropreteDiurne == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Comportement lors de l’examen : {% if tag.val_medGeCsPed3AComportementExamen == "adapte" %}adapté{% elseif tag.val_medGeCsPed3AComportementExamen == "inhibe" %}inhibé{% elseif tag.val_medGeCsPed3AComportementExamen == "agite" %}agité{% else %}- non renseigné -{% endif %}
+</div>
+</div>
+<hr>
+<h3>Autres éléments et synthèse</h3>
+<div class="row">
+<div class="t9 col">
+Respiration : {% if tag.val_medGeCsPed3ARespiration == "n" %}nasale{% elseif tag.val_medGeCsPed3ARespiration == "b" %}buccale{% else %}- non renseigné -{% endif %}<br>
+Ronflements : {% if tag.val_medGeCsPed3ARonflements == "n" %}non{% elseif tag.val_medGeCsPed3ARonflements == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+Dents cariées soignées : {{ tag.medGeCsPed3ADentsCarieesSoignees }} &nbsp;&nbsp;&nbsp;
+cariées non soignées : {{ tag.medGeCsPed3ADentsCarieesNonSoignees }} &nbsp;&nbsp;&nbsp;
+absentes : {{ tag.medGeCsPed3ADentsAbsentes }} &nbsp;&nbsp;&nbsp;
+traumatisées : {{ tag.medGeCsPed3ADentsTraumatisees }}<br>
+Conseils d’hygiène donnés : {% if tag.val_medGeCsPed3AConseilsHygiene == "n" %}non{% elseif tag.val_medGeCsPed3AConseilsHygiene == "o" %}oui{% else %}- non renseigné -{% endif %}<br>
+<p>Examen somatique et synthèse de la consultation :<br>{{ tag.medGeCsPed3ASynthese|nl2br }}</p>
+</div>
+</div>
