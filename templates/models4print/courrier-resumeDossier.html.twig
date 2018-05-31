@@ -1,0 +1,70 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : courrier vierge
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+
+<p style="text-align:right">New York, le {{ "now"|date("d/m/Y") }}</p>
+<br>
+<h2>Résumé du dossier de {{ tag.identiteCompleteTitreLong }}</h2>
+
+<h3>Données administratives</h3>
+<ul>
+  <li>Date de naissance : {{ tag.birthdate }}</li>
+  <li>Adresse : {{ tag.streetNumber }} {{ tag.street }} {{ tag.postalCodePerso }} {{ tag.city }}</li>
+  <li>Activité professionnelle : {{ tag.job }}</li>
+</ul>
+
+<h3>Données cliniques/biologiques actuelles et antécédents généraux</h3>
+<ul>
+  <li>Poids : {{ tag.poids }} kg</li>
+  <li>Taille : {{ tag.taillePatient }} cm</li>
+  <li>Goupe sanguin : {{ tag.groupeSanguin }}</li>
+  <li>Sérologie toxoplasmose : {{ tag.toxoStatut }}</li>
+  <li>Sérologie rubéole : {{ tag.toxoStatut }}</li>
+  <li>Tabac et toxiques : {{ tag.toxiques }}</li>
+  <li>Allergies : {{ tag.allergies|nl2br }}</li>
+</ul>
+
+
+
+<h3>Antécédents obstétricaux</h3>
+
+{{ tag.atcdObs|nl2br }}
+
+<h3>Antécédents gynécologiques</h3>
+
+{{ tag.atcdPersoGyneco|nl2br }}
+
+<h3>Antécédents médico-chirurgicaux</h3>
+
+{{ tag.atcdMedicChir|nl2br }}
+
+<h3>Antécédents familiaux</h3>
+
+{{ tag.atcdFamiliaux|nl2br }}
