@@ -30,6 +30,8 @@
 
     <div class="jumbotron col-md-12">
         {{ f.formbuilder(page.formSynthese , 'gynObsSyntheseGyn' ) }}
+
+        {# consultation #}
         {% for v in page.typeCsCla %}
             <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
         {% endfor %}
@@ -38,9 +40,11 @@
             <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
         {% endfor %}
 
+        {# examens pédiatriques #}
+        {% if page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears < 18 %}
         <div class="btn-group">
           <button class="btn btn-success btn-sm dropdown-toggle mb-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Examens pédiatriques
+            Examens pédiatriques spécifiques
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             {% for v in page.typeCsPedia %}
@@ -48,10 +52,9 @@
             {% endfor %}
           </div>
         </div>
+        {% endif %}
 
-
-
-        {% if page.grossesseEnCours.id == '' and page.patient.administrativeDatas.birthdate.age|number_format < 60 and page.patient.administrativeDatas.birthdate.age|number_format > 15 and page.patient.administrativeDatas.administrativeGenderCode.value == 'F' %}
+        {% if page.grossesseEnCours.id == '' and page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears < 60 and page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears > 14 and page.patient.administrativeDatas.administrativeGenderCode.value == 'F' %}
             <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/module/actions/installNewGro/{{ page.patient.id }}/" role="button" class="btn btn-info btn-sm float-right m-1 newGro">Nouvelle grossesse</a>
         {% endif %}
     </div>
