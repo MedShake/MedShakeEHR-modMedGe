@@ -76,11 +76,11 @@
   {% endif %}
 
   {# JS commun au formulaire de consultation du module #}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/commonGynobs.js?{{ modules.gynobs }}"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/commonMedge.js?{{ modules.medge }}"></script>
 
   {# JS spécifiques des formulaires présents à l'affichage initial de la page #}
   {% for i in page.listeForms %}
-    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js?{{ modules.gynobs }}"></script>
+    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js?{{ modules.medge }}"></script>
   {% endfor %}
 
   {# CSS spécifique #}

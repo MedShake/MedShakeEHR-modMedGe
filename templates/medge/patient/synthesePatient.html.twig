@@ -32,11 +32,17 @@
         {{ f.formbuilder(page.formSynthese , 'gynObsSyntheseGyn' ) }}
 
         {# consultation #}
-        {% for v in page.typeCsCla %}
-            <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
-        {% endfor %}
+        {% if page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears >= 18 %}
+          {% for v in page.medGeCatConsultBaseAdulte %}
+              <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
+          {% endfor %}
+        {% else %}
+          {% for v in page.medGeCatConsultBasePedia %}
+              <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
+          {% endfor %}
+        {% endif %}
 
-        {% for v in page.typeCsDiv %}
+        {% for v in page.medGeCatConsultDiverses %}
             <button type="button" class="btn btn-success btn-sm addNewCS mb-1" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
         {% endfor %}
 
@@ -47,7 +53,7 @@
             Examens pédiatriques spécifiques
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            {% for v in page.typeCsPedia %}
+            {% for v in page.medGeCatConsultPedia %}
                 <a href="#" class="dropdown-item addNewCS" data-parentID='0' data-instanceMere="0" data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</a>
             {% endfor %}
           </div>
