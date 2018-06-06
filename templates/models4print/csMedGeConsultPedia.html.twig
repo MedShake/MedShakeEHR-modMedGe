@@ -27,18 +27,17 @@
 
 {% set tag = page.courrier %}
 
-
-
 <p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
 
 <h2 style="text-align : center">{{ tag.identiteUsuelleTitreCourtDdn }}</h2>
 
 <h3>Consultation du jour</h3>
 
-{% if tag.taillePatient %}Taille : {{ tag.taillePatient }}<br>{% endif %}
-{% if tag.perimetreCranien %}PC : {{ tag.perimetreCranien }}<br>{% endif %}
-{% if tag.temperature %}Température : {{ tag.temperature }}<br>{% endif %}
-{% if tag.taSystolique %}TAS : {{ tag.taSystolique }}<br>{% endif %}
-{% if tag.taDiastolique %}TAD : {{ tag.taDiastolique }}<br>{% endif %}
-{% if tag.freqCardiaque %}FC : {{ tag.freqCardiaque }}<br>{% endif %}
+{% if tag.poids %}Poids : {{ tag.poids }} kg<br>{% endif %}
+{% if tag.taillePatient %}Taille : {{ tag.taillePatient }} cm<br>{% endif %}
+{% if tag.perimetreCranien %}PC : {{ tag.perimetreCranien }} cm<br>{% endif %}
+{% if tag.temperature %}Température : {{ tag.temperature }} °C<br>{% endif %}
+{% if tag.taSystolique %}TAS : {{ tag.taSystolique }} mmHg<br>{% endif %}
+{% if tag.taDiastolique %}TAD : {{ tag.taDiastolique }} mmHg<br>{% endif %}
+{% if tag.freqCardiaque %}FC : {{ tag.freqCardiaque }} bpm<br>{% endif %}
 <br><p>Examen du jour :<br>{{ tag.medGeCsExamenDuJour|nl2br }}</p>
