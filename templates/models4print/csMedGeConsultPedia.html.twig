@@ -33,6 +33,8 @@
 
 <h3>Consultation du jour</h3>
 
+{% if tag.medGeCsMotifDuJour %}Motif de consultation : {{ tag.medGeCsMotifDuJour }}<br><br>{% endif %}
+
 {% if tag.poids %}Poids : {{ tag.poids }} kg<br>{% endif %}
 {% if tag.taillePatient %}Taille : {{ tag.taillePatient }} cm<br>{% endif %}
 {% if tag.perimetreCranien %}PC : {{ tag.perimetreCranien }} cm<br>{% endif %}
@@ -41,3 +43,5 @@
 {% if tag.taDiastolique %}TAD : {{ tag.taDiastolique }} mmHg<br>{% endif %}
 {% if tag.freqCardiaque %}FC : {{ tag.freqCardiaque }} bpm<br>{% endif %}
 <br><p>Examen du jour :<br>{{ tag.medGeCsExamenDuJour|nl2br }}</p>
+
+{% if tag.medGeCsConclusionDuJour %}<br>Synthèse : {{ tag.medGeCsConclusionDuJour }}{% endif %}
