@@ -58,4 +58,20 @@ class msModMedgeDataCourrier
 
     }
 
+
+    public static function getCourrierDataCompleteModuleModele_modeleCourrierResumeVaccinations(&$d)
+    {
+      $obj=new msObjet;
+      $obj->setToID($d['patientID']);
+      if($liste=$obj->getListObjetsIdFromName('medGeCsVaccination')) {
+        foreach($liste as $id=>$date) {
+          $tab = $obj->getObjetAndSons($id, 'name');
+          $date = new DateTime($date);
+          $rd[]='<li>'.$date->format('d/m/Y').' : <strong>'.$tab['medGeCsDivVaccinationVaccin']['value'].'</strong> (lot : '.$tab['medGeCsDivVaccinationLot']['value'].')</li>';
+        }
+
+        $d['listeVaccinations']='<ul>'.implode("\n", $rd).'</ul>';
+      }
+    }
+
 }
