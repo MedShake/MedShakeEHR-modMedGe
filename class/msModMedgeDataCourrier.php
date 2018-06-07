@@ -58,7 +58,11 @@ class msModMedgeDataCourrier
 
     }
 
-
+  /**
+   * Extraction complémentaire pour le modèle de courrier Résumé des vaccinations
+   * @param  array $d tableau des tags
+   * @return void
+   */
     public static function getCourrierDataCompleteModuleModele_modeleCourrierResumeVaccinations(&$d)
     {
       $obj=new msObjet;
@@ -73,5 +77,36 @@ class msModMedgeDataCourrier
         $d['listeVaccinations']='<ul>'.implode("\n", $rd).'</ul>';
       }
     }
+
+    /**
+     * Extraction complémentaire pour le modèle de courrier résumé du dossier
+     * @param  array $d tableau des tags
+     * @return void
+     */
+      public static function getCourrierDataCompleteModuleModele_medGeModeleCourrierResumeDossier(&$d)
+      {
+        global $p;
+
+        // extraction des ATCD du formulaire lateral
+        $atcd = new msCourrier();
+        $atcd = $atcd->getExamenData($d['patientID'], 'medGeATCD', 0);
+        if (is_array($atcd)) {
+            $d=$d+$atcd;
+        }
+
+        // si LAP, extraction des donnéés structurées
+        if($p['config']['utiliserLap'] == 'true') {
+          $patient = new msPeople;
+          $patient->setToID($d['patientID']);
+          foreach(explode(',', $p['config']['lapActiverAtcdStrucSur']) as $v) {
+            $d['atcdStruc'][$v]=$patient->getAtcdStruc($v);
+          }
+          foreach(explode(',', $p['config']['lapActiverAllergiesStrucSur']) as $v) {
+            $d['allergiesStruc'][$v]=$patient->getAllergies($v);
+          }
+          $d['ALD']=$patient->getALD();
+        }
+
+      }
 
 }

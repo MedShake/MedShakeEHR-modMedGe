@@ -1,0 +1,127 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : résumé du dossier - module médecine générale
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+
+<p style="text-align:right">New York, le {{ "now"|date("d/m/Y") }}</p>
+<br>
+<h2>Résumé du dossier de {{ tag.identiteCompleteTitreLong }}</h2>
+
+<h3>Données administratives</h3>
+<ul>
+  <li>Date de naissance : {{ tag.birthdate }}</li>
+  <li>Adresse : {{ tag.streetNumber }} {{ tag.street }} {{ tag.postalCodePerso }} {{ tag.city }}</li>
+  <li>Activité professionnelle : {{ tag.job }}</li>
+</ul>
+
+<h3>Données cliniques/biologiques actuelles et antécédents généraux</h3>
+<ul>
+  <li>Poids : {{ tag.poids }} kg</li>
+  <li>Taille : {{ tag.taillePatient }} cm</li>
+  <li>Pression artérielle : {{ tag.taSystolique }}/{{ tag.taDiastolique }} mmHg</li>
+  <li>Fréquence cardiaque : {{ tag.freqCardiaque }} bpm</li>
+  <li>Clairance de la créatinine : {{ tag.clairanceCreatinine }} mL/min</li>
+  <li>Tabac et toxiques : {{ tag.toxiques }}</li>
+</ul>
+
+<h3>Allergies</h3>
+{% if tag.allergiesStruc.allergies.allergiesData %}
+  <ul>
+  {% for all in tag.allergiesStruc.allergies.allergiesData %}
+    <li>
+    {{ all.libelle }}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{{ tag.allergies|nl2br }}
+
+{% if tag.ALD is not empty %}
+<h3>ALD</h3>
+<ul>
+  {% for ald in tag.ALD %}
+  <li>{{ ald.aldLabel }}
+    {% if ald.aldDateDebutPriseEnCharge.value %}(pris en charge au {{ ald.aldDateDebutPriseEnCharge.value }}){% endif %}
+  </li>
+  {% endfor %}
+
+</ul>
+{% endif %}
+
+<h3>Antécédents médicaux</h3>
+{% if tag.atcdStruc.medGeAtcdPersoMedicaux.atcd %}
+  <ul>
+  {% for atc in tag.atcdStruc.medGeAtcdPersoMedicaux.atcd %}
+    <li>
+    {{ atc.atcdStrucCIM10Label.value }}
+    {% if atc.atcdStrucDateDebutAnnee.value > 0 or atc.atcdStrucDateFinAnnee.value > 0 %} : {% endif %}
+    {% if atc.atcdStrucDateDebutJour.value > 0%}{% if atc.atcdStrucDateDebutJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutJour.value }}/{% endif %}{% if atc.atcdStrucDateDebutMois.value > 0 %}{% if atc.atcdStrucDateDebutMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutMois.value }}/{% endif %}{{ atc.atcdStrucDateDebutAnnee.value }}
+    {% if atc.atcdStrucDateDebutAnnee.value > 0 and atc.atcdStrucDateFinAnnee.value > 0 %} - {% endif %}
+    {% if atc.atcdStrucDateFinJour.value > 0%}{% if atc.atcdStrucDateFinJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinJour.value }}/{% endif %}{% if atc.atcdStrucDateFinMois.value > 0 %}{% if atc.atcdStrucDateFinMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinMois.value }}/{% endif %}{{ atc.atcdStrucDateFinAnnee.value }}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{{ tag.medGeAtcdPersoMedicaux|nl2br }}
+
+<h3>Antécédents chirugicaux</h3>
+{% if tag.atcdStruc.medGeAtcdPersoChirugicaux.atcd %}
+  <ul>
+  {% for atc in tag.atcdStruc.medGeAtcdPersoChirugicaux.atcd %}
+    <li>
+    {{ atc.atcdStrucCIM10Label.value }}
+    {% if atc.atcdStrucDateDebutAnnee.value > 0 or atc.atcdStrucDateFinAnnee.value > 0 %} : {% endif %}
+    {% if atc.atcdStrucDateDebutJour.value > 0%}{% if atc.atcdStrucDateDebutJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutJour.value }}/{% endif %}{% if atc.atcdStrucDateDebutMois.value > 0 %}{% if atc.atcdStrucDateDebutMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutMois.value }}/{% endif %}{{ atc.atcdStrucDateDebutAnnee.value }}
+    {% if atc.atcdStrucDateDebutAnnee.value > 0 and atc.atcdStrucDateFinAnnee.value > 0 %} - {% endif %}
+    {% if atc.atcdStrucDateFinJour.value > 0%}{% if atc.atcdStrucDateFinJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinJour.value }}/{% endif %}{% if atc.atcdStrucDateFinMois.value > 0 %}{% if atc.atcdStrucDateFinMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinMois.value }}/{% endif %}{{ atc.atcdStrucDateFinAnnee.value }}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{{ tag.medGeAtcdPersoChirugicaux|nl2br }}
+
+<h3>Antécédents familiaux</h3>
+{% if tag.atcdStruc.medGeAtcdFamiliaux.atcd %}
+  <ul>
+  {% for atc in tag.atcdStruc.medGeAtcdFamiliaux.atcd %}
+    <li>
+    {{ atc.atcdStrucCIM10Label.value }}
+    {% if atc.atcdStrucDateDebutAnnee.value > 0 or atc.atcdStrucDateFinAnnee.value > 0 %} : {% endif %}
+    {% if atc.atcdStrucDateDebutJour.value > 0%}{% if atc.atcdStrucDateDebutJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutJour.value }}/{% endif %}{% if atc.atcdStrucDateDebutMois.value > 0 %}{% if atc.atcdStrucDateDebutMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutMois.value }}/{% endif %}{{ atc.atcdStrucDateDebutAnnee.value }}
+    {% if atc.atcdStrucDateDebutAnnee.value > 0 and atc.atcdStrucDateFinAnnee.value > 0 %} - {% endif %}
+    {% if atc.atcdStrucDateFinJour.value > 0%}{% if atc.atcdStrucDateFinJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinJour.value }}/{% endif %}{% if atc.atcdStrucDateFinMois.value > 0 %}{% if atc.atcdStrucDateFinMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinMois.value }}/{% endif %}{{ atc.atcdStrucDateFinAnnee.value }}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{{ tag.medGeAtcdFamiliaux|nl2br }}
