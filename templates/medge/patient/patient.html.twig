@@ -52,6 +52,17 @@
       newReglement: 'body',
       delai: 2
     };
+
+    if (!scriptsList) {
+      var scriptsList = {
+        ordonnance: "ordonnance.js",
+        print: "print.js",
+        docupload: "docupload.js",
+        email: "email.js",
+        reglement: ["reglement.js", "medGeReglement.js"]
+      };
+    }
+
   </script>
 
   {{ parent() }}

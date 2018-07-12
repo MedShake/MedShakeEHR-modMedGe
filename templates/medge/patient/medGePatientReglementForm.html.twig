@@ -1,0 +1,383 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template gynobs > patient : formulaire de réglement propre à la médecine générale
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+<div class="jumbotron col-md-12">
+  <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  {% if page.form.addHidden.objetID > 0 %}
+    <h3>Édition du règlement</h3>
+  {% else %}
+    <h3>Nouveau règlement</h3>
+  {% endif %}
+
+  <ul class="nav nav-pills my-3" id="menuReglementMedGe" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="consultation-tab" data-toggle="tab" href="#consultation">Consultation &amp; visites</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="sutures-tab" data-toggle="tab" href="#sutures">CCAM : Sutures</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="factures-tab" data-toggle="tab" href="#facturespre">Factures préétablies</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="ccam-tab" data-toggle="tab" href="#facturesman">Factures manuelles</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="menuReglementMedGeContent">
+
+    {# Consultation #}
+    <div class="tab-pane fade show active mb-5" id="consultation">
+      <form>
+        <div class="form-row">
+
+          <div class="col-2">
+            <div class="form-group">
+              <label for="mcAge">Age</label>
+              <select id="mcAge" class="custom-select">
+                {{ page.formReg.itemsMenus.mcAge }}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-2">
+            <div class="form-group">
+              <label for="mcContexte">Contexte</label>
+              <select id="mcContexte" class="custom-select">
+                {{ page.formReg.itemsMenus.mcContexte }}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-group">
+              <label for="mcPeriode">Période horaire</label>
+              <select id="mcPeriode" class="custom-select">
+                {{ page.formReg.itemsMenus.mcPeriode }}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-5">
+            <div class="form-group">
+              <label for="mcSituation">Situation</label>
+              <select id="mcSituation" class="custom-select">
+                {{ page.formReg.itemsMenus.mcSituation }}
+              </select>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="form-row">
+          <div class="col-2">
+            Actes associés :
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" value="true" class="custom-control-input" id="mcActesECG">
+              <label class="custom-control-label" for="mcActesECG">ECG</label>
+            </div>
+
+
+          {% if page.patient.administrativeDatas.administrativeGenderCode == 'F' and page.patient.ages.ageTotalYears > 17 %}
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" value="true" class="custom-control-input" id="mcActesFrottis">
+              <label class="custom-control-label" for="mcActesFrottis">Frottis</label>
+            </div>
+
+          {% endif %}
+          </div>
+
+          <div id="mcIKblock" class="col-2 d-none">
+            <div class="form-group">
+              <label for="mcIK">Indemnités kilométriques</label>
+              <input type="number" min="0" step="1" class="form-control" id="mcIK" placeholder="0">
+              <small id="ikHelpText" class="form-text text-muted"></small>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+
+    <div class="tab-pane fade" id="sutures">
+
+      <form>
+        <div class="form-row">
+
+          <div class="col-2">
+            <div class="form-group">
+              <label for="mcContexte">Contexte</label>
+              <select id="mcContexte" class="custom-select">
+                {{ page.formReg.itemsMenus.mcContexte }}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-group">
+              <label for="mcPeriode">Période horaire</label>
+              <select id="mcPeriode" class="custom-select">
+                {{ page.formReg.itemsMenus.mcPeriode }}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-5">
+            <div class="form-group">
+              <label for="mcSituation">Situation</label>
+              <select id="mcSituation" class="custom-select">
+                {{ page.formReg.itemsMenus.mcSituation }}
+              </select>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="form-row">
+
+          <div id="mcIKblock" class="col-2 d-none">
+            <div class="form-group">
+              <label for="mcIK">Indemnités kilométriques</label>
+              <input type="number" min="0" step="1" class="form-control" id="mcIK" placeholder="0">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-row my-3">
+          <div class="col-4">
+            <div class="card">
+              <div class="card-header">
+                Face
+              </div>
+              <div class="card-body">
+                <div class="custom-control custom-checkbox my-2">
+                  <input type="checkbox" class="custom-control-input" id="pSourcil">
+                  <label class="custom-control-label" for="pSourcil">Sourcil</label>
+                </div>
+                <div class="custom-control custom-checkbox  my-2">
+                  <input type="checkbox" class="custom-control-input" id="pNez">
+                  <label class="custom-control-label" for="pNez">Nez</label>
+                </div>
+                <div class="custom-control custom-checkbox  my-2">
+                  <input type="checkbox" class="custom-control-input" id="pLevre">
+                  <label class="custom-control-label" for="pLevre">Lèvre</label>
+                  <select class="" id="pLevreTransID">
+                    <option selected="selected" value="n">non transfixiante</option>
+                    <option value="o">transfixiante</option>
+                  </select>
+                </div>
+                <div class="custom-control custom-checkbox  my-2">
+                  <input type="checkbox" class="custom-control-input" id="pAuricule">
+                  <label class="custom-control-label" for="pAuricule">Auricule</label>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Plaie superficielle</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="pFaceSuper" aria-describedby="pFaceSuper">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="pFaceSuper">cm totaux</span>
+                  </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Plaie profonde</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="pFacePro" aria-describedby="pFacePro">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="pFacePro">cm totaux</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card">
+              <div class="card-header">
+                Main
+              </div>
+              <div class="card-body">
+                <div class="custom-control custom-checkbox  my-2">
+                  <input type="checkbox" class="custom-control-input" id="pPulpoUngu">
+                  <label class="custom-control-label" for="pPulpoUngu">Plaie pulpounguéale</label>
+                  <select class="" id="pPulpoUnguNb">
+                    <option selected="selected" value="u">unique</option>
+                    <option value="m">multiple</option>
+                  </select>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Plaie superficielle</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="pMainSuper" aria-describedby="pFaceSuper">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="pMainSuper">cm totaux</span>
+                  </div>
+                </div>
+                <div class="custom-control custom-checkbox  my-2">
+                  <input type="checkbox" class="custom-control-input" id="pMainPro">
+                  <label class="custom-control-label" for="pMainPro">Plaie profonde</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-header">
+                Autres zones
+              </div>
+              <div class="card-body">
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Plaie superficielle</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="pAutreSuper" aria-describedby="pAutreSuper">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="pAutreSuper">cm totaux</span>
+                  </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Plaie profonde</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="pAutrePro" aria-describedby="pAutrePro">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="pAutrePro">cm totaux</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+
+
+    </div>
+
+    <div class="tab-pane fade" id="facturespre">
+        <div class="row mb-3">
+            {% for k, v in page.menusActes %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label" for="selectActe{{ loop.index }}ID">{{ k }}
+                        </label>
+                        <select class="form-control custom-select form-control-sm selectActeStarter" id="selectActe{{ loop.index }}ID" name="selectActe{{ loop.index }}" autocomplete="off">
+                            <option value=''></option>
+                            {% for val in v %}
+                                <option value="{{ val.id }}"
+                                {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}
+                                 style="padding-top : 6px; padding-bottom : 6px; border-top : 1px solid #DDD;
+                                {% if val.flagCmu %}background : #EEE; {% endif %}
+                                {% if val.flagImportant %}font-weight : bold; {% endif %}
+                                "
+                              >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ (val.details|keys)|join(' + ') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+
+
+    <div class="tab-pane fade" id="facturesman">
+      <div class="alert alert-danger" role="alert">
+        Aucune vérification de cohérence de la facturation n'est faite dans ce mode !
+      </div>
+      <form id="formActeSearch" class="mb-5">
+        <div class="form-row">
+          <div class="col">
+            <label for="acteSearch">Recherche d'actes</label>
+            <input id="acteSearch" type="text" class="form-control" autocomplete="off" placeholder="code, label ...">
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+
+  <div id="detFacturation" class="card col-md-12 px-0 mb-5" style="display: none">
+    <div class="card-header text-center gras">Facturation à appliquer</div>
+
+    <table class="table table-sm mb-0 table-hover">
+      <thead>
+        <th class="col-1">acte</th>
+        <th class="text-left"></th>
+        <th class="col-1 text-left">code asso.</th>
+        <th class="col-1 text-center">base</th>
+        <th class="pourcents col-1 text-center">%</th>
+        <th class="col-1 text-center">modif CCAM</th>
+        <th class="col-1 text-center"></th>
+        <th class="col-1 text-center"></th>
+        <th class="col-1 text-center">dépassement</th>
+        <th class="col-1 text-right">total</th>
+        <th class="col-auto"></th>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  {{ f.formbuilder(page.form , page.formIN ) }}
+<script>
+
+  {% if page.form.addHidden.objetID > 0 %}
+    setTimeout(function() {
+      construireTabActesEdition();
+    }, 200);
+  {% else %}
+    // au 1er chargement
+    setTimeout(function() {
+        $( "#mcAge" ).trigger( "change" );
+    }, 100);
+  {% endif %}
+
+  modificateursCcamValue = {
+    {% for code, val in page.modifcateursCcam %}
+    '{{ code }}' : '{{ val.tarifs1 }}',
+    {% endfor %}
+  };
+
+  modificateursCcamUnit = {
+    {% for code, val in page.modifcateursCcam %}
+    '{{ code }}' : '{{ val.tarifUnit }}',
+    {% endfor %}
+  };
+
+
+</script>
+</div>
