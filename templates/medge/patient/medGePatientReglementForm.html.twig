@@ -61,7 +61,7 @@
           <div class="col-2">
             <div class="form-group">
               <label for="mcAge">Age</label>
-              <select id="mcAge" class="custom-select">
+              <select class="mcAge custom-select">
                 {{ page.formReg.itemsMenus.mcAge }}
               </select>
             </div>
@@ -70,7 +70,7 @@
           <div class="col-2">
             <div class="form-group">
               <label for="mcContexte">Contexte</label>
-              <select id="mcContexte" class="custom-select">
+              <select class="mcContexte custom-select">
                 {{ page.formReg.itemsMenus.mcContexte }}
               </select>
             </div>
@@ -79,7 +79,7 @@
           <div class="col-3">
             <div class="form-group">
               <label for="mcPeriode">Période horaire</label>
-              <select id="mcPeriode" class="custom-select">
+              <select class="mcPeriode custom-select">
                 {{ page.formReg.itemsMenus.mcPeriode }}
               </select>
             </div>
@@ -88,7 +88,7 @@
           <div class="col-5">
             <div class="form-group">
               <label for="mcSituation">Situation</label>
-              <select id="mcSituation" class="custom-select">
+              <select class="mcSituation custom-select">
                 {{ page.formReg.itemsMenus.mcSituation }}
               </select>
             </div>
@@ -116,11 +116,11 @@
           {% endif %}
           </div>
 
-          <div id="mcIKblock" class="col-2 d-none">
+          <div class="mcIKblock col-2 d-none">
             <div class="form-group">
               <label for="mcIK">Indemnités kilométriques</label>
-              <input type="number" min="0" step="1" class="form-control" id="mcIK" placeholder="0">
-              <small id="ikHelpText" class="form-text text-muted"></small>
+              <input type="number" min="0" step="1" class="mcIK form-control" placeholder="0">
+              <small class="ikHelpText form-text text-muted"></small>
             </div>
           </div>
 
@@ -137,16 +137,24 @@
           <div class="col-2">
             <div class="form-group">
               <label for="mcContexte">Contexte</label>
-              <select id="mcContexte" class="custom-select">
+              <select class="mcContexte custom-select">
                 {{ page.formReg.itemsMenus.mcContexte }}
               </select>
+            </div>
+          </div>
+
+          <div class="mcIKblock col-2 d-none">
+            <div class="form-group">
+              <label for="mcIK">Indemnités kilométriques</label>
+              <input type="number" min="0" step="1" class="mcIK form-control" placeholder="0">
+              <small class="ikHelpText form-text text-muted"></small>
             </div>
           </div>
 
           <div class="col-3">
             <div class="form-group">
               <label for="mcPeriode">Période horaire</label>
-              <select id="mcPeriode" class="custom-select">
+              <select class="mcPeriode custom-select">
                 {{ page.formReg.itemsMenus.mcPeriode }}
               </select>
             </div>
@@ -155,7 +163,7 @@
           <div class="col-5">
             <div class="form-group">
               <label for="mcSituation">Situation</label>
-              <select id="mcSituation" class="custom-select">
+              <select class="mcSituation custom-select">
                 {{ page.formReg.itemsMenus.mcSituation }}
               </select>
             </div>
@@ -165,14 +173,16 @@
         </div>
 
         <div class="form-row">
-
-          <div id="mcIKblock" class="col-2 d-none">
+          <div class="col-5">
             <div class="form-group">
-              <label for="mcIK">Indemnités kilométriques</label>
-              <input type="number" min="0" step="1" class="form-control" id="mcIK" placeholder="0">
+              <label>Contexte et topographie des lésions</label>
+              <select class="mcLesions custom-select">
+                <option value=""></option>
+                <option value="LM">Localisation multiple</option>
+                <option value="LTM">Lésions traumatiques multiples et récentes</option>
+              </select>
             </div>
           </div>
-
         </div>
 
         <div class="form-row my-3">
@@ -193,7 +203,7 @@
                 <div class="custom-control custom-checkbox  my-2">
                   <input type="checkbox" class="custom-control-input" id="pLevre">
                   <label class="custom-control-label" for="pLevre">Lèvre</label>
-                  <select class="" id="pLevreTransID">
+                  <select class="" id="pLevreTrans">
                     <option selected="selected" value="n">non transfixiante</option>
                     <option value="o">transfixiante</option>
                   </select>
@@ -206,18 +216,18 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Plaie superficielle</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="pFaceSuper" aria-describedby="pFaceSuper">
+                  <input type="text" class="form-control" id="pFaceSuper">
                   <div class="input-group-append">
-                    <span class="input-group-text" id="pFaceSuper">cm totaux</span>
+                    <span class="input-group-text">cm totaux</span>
                   </div>
                 </div>
                 <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Plaie profonde</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="pFacePro" aria-describedby="pFacePro">
+                  <input type="text" class="form-control" id="pFacePro">
                   <div class="input-group-append">
-                    <span class="input-group-text" id="pFacePro">cm totaux</span>
+                    <span class="input-group-text" >cm totaux</span>
                   </div>
                 </div>
               </div>
@@ -242,9 +252,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Plaie superficielle</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="pMainSuper" aria-describedby="pFaceSuper">
+                  <input type="text" class="form-control" id="pMainSuper">
                   <div class="input-group-append">
-                    <span class="input-group-text" id="pMainSuper">cm totaux</span>
+                    <span class="input-group-text" >cm totaux</span>
                   </div>
                 </div>
                 <div class="custom-control custom-checkbox  my-2">
@@ -264,28 +274,32 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Plaie superficielle</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="pAutreSuper" aria-describedby="pAutreSuper">
+                  <input type="text" class="form-control" id="pAutreSuper">
                   <div class="input-group-append">
-                    <span class="input-group-text" id="pAutreSuper">cm totaux</span>
+                    <span class="input-group-text" >cm totaux</span>
                   </div>
                 </div>
                 <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Plaie profonde</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="pAutrePro" aria-describedby="pAutrePro">
+                  <input type="text" class="form-control" id="pAutrePro">
                   <div class="input-group-append">
-                    <span class="input-group-text" id="pAutrePro">cm totaux</span>
+                    <span class="input-group-text" >cm totaux</span>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
       </form>
 
-
+      <div class="alert alert-warning d-none" id="messagesInfos">
+        <ul id="messagesInfosListe" class="list-unstyled mt-2">
+        </ul>
+      </div>
 
     </div>
 
@@ -362,7 +376,7 @@
   {% else %}
     // au 1er chargement
     setTimeout(function() {
-        $( "#mcAge" ).trigger( "change" );
+        $( "#consultation .mcAge" ).trigger( "change" );
     }, 100);
   {% endif %}
 

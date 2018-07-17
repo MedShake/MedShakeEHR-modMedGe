@@ -36,6 +36,7 @@ $p['page']['patient']['ages']=$patient->getAgeFormats();
 
 ////// définitions pour le formulaire
 $hono = new msModMedgeCalcHonoraires();
+$hono->setMode($_POST['mode']);
 $hono->setPatientAgeInMonths($p['page']['patient']['ages']['ageTotalMonths']);
 $hono->setPatientSexe($p['page']['patient']['administrativeDatas']['administrativeGenderCode']);
 $hono->setContexte($_POST['mcContexte']);
@@ -43,10 +44,12 @@ $hono->setPlageAge($_POST['mcAge']);
 $hono->setSituation($_POST['mcSituation']);
 $hono->setPeriode($_POST['mcPeriode']);
 $hono->setIK($_POST['mcIK']);
-if($_POST['mcActesECG'] == 'true') $hono->addActeCcam('DEQP003');
-if($_POST['mcActesFrottis']=='true') $hono->addActeCcam('JKHD001');
+if(isset($_POST['mcActesECG']) and $_POST['mcActesECG'] == 'true') $hono->addActeCcam('DEQP003');
+if(isset($_POST['mcActesFrottis']) and $_POST['mcActesFrottis']=='true') $hono->addActeCcam('JKHD001');
+if(isset($_POST['actesFaits'])) $hono->setActesFaits($_POST['actesFaits']);
 $menus = $hono->getOptionsTagsForMenus();
 $menus['details'] = $hono->getActes();
 $menus['tarif'] = $hono->getTarifFinal();
 $menus['ikHelpText'] = $hono->getIkHelpText();
+$menus['messagesInfos'] = $hono->getMessagesInfos();
 exit(json_encode($menus));

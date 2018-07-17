@@ -28,14 +28,24 @@
 
 $(document).ready(function() {
 
-  //observer le changement sur dépassement
-  $('#newReglement').on("change", "#mcContexte, #mcAge, #mcSituation, #mcPeriode, #mcActesECG, #mcActesFrottis, #mcIK", function(e) {
+  //observer le changement pour consultation
+  $('#newReglement').on("change", "#consultation .mcContexte, #consultation .mcAge, #consultation .mcSituation, #consultation .mcPeriode, #mcActesECG, #mcActesFrottis, #consultation .mcIK", function(e) {
     e.preventDefault();
     calculerConsultation();
   });
 
+  //observer le changement pour calc Sutures
+  $('#newReglement').on("change", "#sutures input[type='checkbox'], #sutures select, #sutures input[type='number']", function(e) {
+    e.preventDefault();
+    calculerSuturesCCAM();
+  });
+  $('#newReglement').on("keyup", "#sutures input[type='text']", function(e) {
+    e.preventDefault();
+    calculerSuturesCCAM();
+  });
+
   // reset au changement d'onglet
-  $('#newReglement').on("click",'#menuReglementMedGe a' , function(e) {
+  $('#newReglement').on("click", '#menuReglementMedGe a', function(e) {
     factureActuelle = [];
     resetModesReglement();
     $('#detFacturation').hide();
@@ -47,9 +57,14 @@ $(document).ready(function() {
     calcResteDu();
   });
 
-  //onget consultations
-  $('#consultation-tab').on('shown.bs.tab', function (e) {
-      $( "#mcAge" ).trigger( "change" );
+  //onglet consultations
+  $('#consultation-tab').on('shown.bs.tab', function(e) {
+    $("#consultation .mcAge").trigger("change");
+  });
+
+  //onglet sutures
+  $('#sutures-tab').on('shown.bs.tab', function(e) {
+    $("#sutures .mcAge").trigger("change");
   });
 
 });
@@ -60,27 +75,28 @@ function calculerConsultation() {
     url: urlBase + '/module/ajax/medGeCalcHonoraires/',
     type: 'post',
     data: {
+      mode: 'calcCV',
       patientID: $('#identitePatient').attr("data-patientID"),
-      mcContexte: $('#mcContexte option:selected').val(),
-      mcAge: $('#mcAge option:selected').val(),
-      mcSituation: $('#mcSituation option:selected').val(),
-      mcPeriode: $('#mcPeriode option:selected').val(),
-      mcActesECG: ($('#mcActesECG').is(':checked'))?true:false,
-      mcActesFrottis: ($('#mcActesFrottis').is(':checked'))?true:false,
-      mcIK:  $('#mcIK').val()
+      mcContexte: $('#consultation .mcContexte option:selected').val(),
+      mcAge: $('#consultation .mcAge option:selected').val(),
+      mcSituation: $('#consultation .mcSituation option:selected').val(),
+      mcPeriode: $('#consultation .mcPeriode option:selected').val(),
+      mcActesECG: ($('#mcActesECG').is(':checked')) ? true : false,
+      mcActesFrottis: ($('#mcActesFrottis').is(':checked')) ? true : false,
+      mcIK: $('#consultation .mcIK').val()
     },
     dataType: "json",
     success: function(data) {
-      $('#mcContexte').html(data.mcContexte);
-      $('#mcAge').html(data.mcAge);
-      $('#mcSituation').html(data.mcSituation);
-      $('#mcPeriode').html(data.mcPeriode);
-      $('#ikHelpText').html(data.ikHelpText);
+      $('#consultation .mcContexte').html(data.mcContexte);
+      $('#consultation .mcAge').html(data.mcAge);
+      $('#consultation .mcSituation').html(data.mcSituation);
+      $('#consultation .mcPeriode').html(data.mcPeriode);
+      $('#consultation .ikHelpText').html(data.ikHelpText);
 
-      if($('#mcContexte option:selected').val() == 'visite') {
-        $('#mcIKblock').addClass('d-flex').removeClass('d-none');
+      if ($('#consultation .mcContexte option:selected').val() == 'visite') {
+        $('#consultation .mcIKblock').addClass('d-flex').removeClass('d-none');
       } else {
-        $('#mcIKblock').addClass('d-none').removeClass('d-flex');
+        $('#consultation .mcIKblock').addClass('d-none').removeClass('d-flex');
       }
       $(".regleTarifCejour").attr('data-tarifdefaut', data['tarif']);
       $(".regleDepaCejour").attr('data-tarifdefaut', 0);
@@ -93,4 +109,72 @@ function calculerConsultation() {
       alert_popup("danger", 'Problème, rechargez la page !');
     }
   });
+}
+
+
+function calculerSuturesCCAM() {
+  actesFaits = {
+    pSourcil: ($('#pSourcil').is(':checked')) ? true : false,
+    pNez: ($('#pNez').is(':checked')) ? true : false,
+    pLevre: ($('#pLevre').is(':checked')) ? true : false,
+    pLevreTrans: $('#pLevreTrans').val(),
+    pAuricule: ($('#pAuricule').is(':checked')) ? true : false,
+    pFaceSuper: $('#pFaceSuper').val(),
+    pFacePro: $('#pFacePro').val(),
+    pPulpoUngu: ($('#pPulpoUngu').is(':checked')) ? true : false,
+    pPulpoUnguNb: $('#pPulpoUnguNb').val(),
+    pMainSuper: $('#pMainSuper').val(),
+    pMainPro: ($('#pMainPro').is(':checked')) ? true : false,
+    pAutreSuper: $('#pAutreSuper').val(),
+    pAutrePro: $('#pAutrePro').val(),
+    mcLesions: $('#sutures .mcLesions option:selected').val(),
+  };
+
+  $.ajax({
+    url: urlBase + '/module/ajax/medGeCalcHonoraires/',
+    type: 'post',
+    data: {
+      mode: 'calcSutures',
+      patientID: $('#identitePatient').attr("data-patientID"),
+      mcAge: $('#consultation .mcAge option:selected').val(),
+      mcContexte: $('#sutures .mcContexte option:selected').val(),
+      mcSituation: $('#sutures .mcSituation option:selected').val(),
+      mcPeriode: $('#sutures .mcPeriode option:selected').val(),
+      mcIK: $('#sutures .mcIK').val(),
+      actesFaits: actesFaits
+    },
+    dataType: "json",
+    success: function(data) {
+
+      $('#sutures .mcContexte').html(data.mcContexte);
+      $('#sutures .mcSituation').html(data.mcSituation);
+      $('#sutures .mcPeriode').html(data.mcPeriode);
+      $('#sutures .ikHelpText').html(data.ikHelpText);
+
+      if(data.messagesInfos.length > 0) {
+        $('#messagesInfos').removeClass('d-none');
+        $('#messagesInfosListe').html(data.messagesInfos);
+      } else {
+        $('#messagesInfos').addClass('d-none');
+        $('#messagesInfosListe').html('');
+      }
+
+      if ($('#sutures .mcContexte option:selected').val() == 'visite') {
+        $('#sutures .mcIKblock').addClass('d-flex').removeClass('d-none');
+      } else {
+        $('#sutures .mcIKblock').addClass('d-none').removeClass('d-flex');
+      }
+      $(".regleTarifCejour").attr('data-tarifdefaut', data['tarif']);
+      $(".regleDepaCejour").attr('data-tarifdefaut', 0);
+      construireTableauActes(data)
+      setDefautTarifEtDepa();
+      calcResteDu();
+      $('#detFacturation').show();
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
+
+
 }

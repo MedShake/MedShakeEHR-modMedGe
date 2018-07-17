@@ -29,21 +29,28 @@
 
 class msModMedgeCalcHonoraires extends msReglement
 {
-
+  private $_mode = 'calcCV';
+  private $_secteurTarif = 'tarifs1';
   private $_patientAgeInMonths;
   private $_patientSexe;
   private $_menuContexte;
+  private $_menuSutureContexte;
   private $_menuPlageAge;
   private $_menuSituation;
   private $_menuPeriode;
   private $_selectedContexte;
+  private $_selectedSutureContexte;
   private $_selectedPlageAge;
   private $_selectedSituation;
   private $_selectedPeriode;
   private $_tarifFinal;
+  private $_actesFaits;
   private $_actesListes = [];
+  private $_actesFinaleListe = [];
+  private $_messagesInfos = [];
   private $_ik=0;
   private $_ikHelpText;
+  private $_modifsCcamListe;
 
   private $_itemsContexteMenu=array(
     'cabinet'=>['label'=>'Cabinet', 'visibled'=>true,'disabled'=>''],
@@ -86,6 +93,14 @@ class msModMedgeCalcHonoraires extends msReglement
   );
 
 /**
+ * Définir le mode de détermination des actes
+ * @param string $mode mode
+ */
+  public function setMode($mode) {
+    return $this->_mode=$mode;
+  }
+
+/**
  * Définir l'age du patient en mois
  * @param int $ageInMonths âge du patient en mois
  */
@@ -117,7 +132,7 @@ class msModMedgeCalcHonoraires extends msReglement
  * @param string $contexte code contexte
  */
   public function setContexte($contexte) {
-    if (!in_array($contexte, ['cabinet', 'visite', 'ccam', 'sutures'])) {
+    if (!in_array($contexte, ['cabinet', 'visite'])) {
         throw new Exception('Le contexte défini n\'existe pas');
     }
     return $this->_menuContexte = $this->_selectedContexte = $contexte;
@@ -140,6 +155,57 @@ class msModMedgeCalcHonoraires extends msReglement
   }
 
 /**
+ * Définir les actes faits (sutures CCAM)
+ * @param array  $ar array des actes de sutures
+ */
+  public function setActesFaits($ar) {
+    return $this->_actesFaits=$ar;
+  }
+
+/**
+ * Définir le nobre d'IK
+ * @param int $ik nombre d'IK
+ */
+  public function setIK($ik) {
+    $this->_ik=$ik;
+  }
+
+/**
+ * Obtenir le texte d'aide sur le IK
+ * @return string texte de conversion IK => km
+ */
+  public function getIkHelpText() {
+    return $this->_ikHelpText;
+  }
+
+/**
+ * Obtenir les messages d'info sur la facturation appliquée
+ * @return string html <li>...</li><li>...
+ */
+  public function getMessagesInfos() {
+    if($this->_actesFaits['mcLesions']=='LM') {
+      $this->_messagesInfos[] = "Le contexte \"Localisation multiple\" s'applique (textes officiels) \"pour les actes de chirurgie portant sur des membres différents, sur le tronc et un membre, sur la tête et un membre\".
+      Assurez-vous que vos actes rentrent bien dans ce cadre !";
+    } elseif($this->_actesFaits['mcLesions']=='LTM') {
+      $this->_messagesInfos[] = "Le contexte \"Lésions traumatiques multiples et récentes\" s'applique (textes officiels) \"pour les actes de chirurgie pour lésions traumatiques multiples et récentes\".
+      Assurez-vous que vos actes rentrent bien dans ce cadre !";
+    }
+    if(!empty($this->_messagesInfos)) {
+      return '<li>'.implode('</li><li>' ,$this->_messagesInfos).'</li>';
+    } else {
+      return '';
+    }
+  }
+
+/**
+ * Ajouter un acte CCAM
+ * @param string $code code acte CCAM
+ */
+  public function addActeCcam($code) {
+    $this->_actesListes[]=$code;
+  }
+
+/**
  * Obtenir le tarif final
  * @return float tarif final
  */
@@ -148,7 +214,7 @@ class msModMedgeCalcHonoraires extends msReglement
   }
 
 /**
- * Appliquer les règles automatiques
+ * Appliquer les règles automatiques en fonction des paramètres du dossier patient
  * @return void
  */
   public function automaticRules() {
@@ -172,6 +238,15 @@ class msModMedgeCalcHonoraires extends msReglement
     } else {
       $this->_selectedPeriode = 'PeriodeJ';
     }
+    //correction spécifique période pour actes sutures en cotation CCAM pure
+    if($this->_mode == 'calcSutures' and $this->_selectedSituation != 'SituationGR') {
+      if($H>=0 and $H<=7) {
+        $this->_selectedPeriode = 'PeriodeN';
+      } elseif($H>=20 and $H<=23) {
+        $this->_selectedPeriode = 'PeriodeS';
+      }
+    }
+
     if($this->_selectedContexte == 'cabinet') {
       $this->_selectedSituation='SituationC';
     } elseif($this->_selectedContexte == 'visite') {
@@ -179,130 +254,200 @@ class msModMedgeCalcHonoraires extends msReglement
     }
   }
 
-  private function _applyRules() {
-
-    //contexte
-    if($this->_selectedContexte == 'cabinet') {
-      $this->_selectedContexte = 'cabinet';
-
-      //situations impossibles
-      $situationsImpossibles=['SituationV', 'SituationVNJ', 'SituationMU', 'SituationVL'];
-      $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, $situationsImpossibles);
-      if(in_array($this->_selectedSituation, $situationsImpossibles)) {
-        $this->_selectedSituation = 'SituationC';
-      }
-
-    } elseif($this->_selectedContexte == 'visite') {
-
-      $this->_selectedContexte = 'visite';
-
-      //situations impossibles
-      $situationsImpossibles=['SituationC', 'SituationMCG', 'SituationAPC', 'SituationMTX', 'SituationCCP','SituationCOE', 'SituationCCP','SituationCSO'];
-      $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, $situationsImpossibles);
-      $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, $situationsImpossibles);
-      if(in_array($this->_selectedSituation, $situationsImpossibles)) {
-        $this->_selectedSituation = 'SituationV';
-      }
-    }
-    // retrait plageAge 0-6 ans si age > 6
-    if($this->_patientAgeInMonths >= 72 ) {
-      $this->_setItemsInvisibled($this->_itemsAgeMenu, ['AgeEnfant']);
-    }
-
-    // certif pédia : désactivation si age > 25 mois
-    if($this->_patientAgeInMonths > 25 ) {
-      $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, ['SituationCOE']);
-    }
-    // consult contraception : désactivation si pas une fille entre 15 et 18 ans
-    if($this->_patientAgeInMonths < 180 or $this->_patientAgeInMonths >= 228 or $this->_patientSexe=='M' ) {
-      $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, ['SituationCCP']);
-    }
-
-    // consult obésité : désactivation si pas entre 3 et 12 ans
-    if($this->_patientAgeInMonths < 36 or $this->_patientAgeInMonths >= 156) {
-      $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, ['SituationCSO']);
-    }
-
-    // correction pour certif pédia obligatoire
-    if($this->_selectedSituation == 'SituationCOE') {
-      $this->_selectedContexte = 'cabinet';
-      $this->_selectedPeriode = 'PeriodeJ';
-    }
-
-    // correction de période si situations incompatibles
-    if(in_array($this->_selectedSituation, ['SituationMCG', 'SituationMRT', 'SituationMUT', 'SituationAPC', 'SituationMSH', 'SituationMIC', 'SituationMTX', 'SituationCOE', 'SituationCCP', 'SituationCSO', 'SituationVL' ])) {
-      $this->_selectedPeriode ='PeriodeJ';
-
-    }
-
+/**
+ * Sortir un acte pour ajout direct à la liste finale
+ * @param string $codeActe code de l'acte
+ * @return array tableau data acte
+ */
+  private function addActe($codeActe) {
+    return msSQL::sqlUnique("select code, label,".$this->_secteurTarif." as tarif,".$this->_secteurTarif." as total,".$this->_secteurTarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM, F, P, S, M, R, D, E, C, U from actes_base where code = '".$codeActe."' ");
   }
 
-  public function setIK($ik) {
-    $this->_ik=$ik;
-  }
-
-  public function getIkHelpText() {
-    return $this->_ikHelpText;
-  }
-
-  public function addActeCcam($code) {
-    $this->_actesListes[]=$code;
-  }
-
+/**
+ * Obtenir les actes pour tableau final
+ * @return array tableau des actes
+ */
   public function getActes() {
     global $p;
+    if($p['config']['administratifSecteurHonoraires']=='1') $tarif='tarifs1'; else $tarif='tarifs2';
 
-    if($this->_selectedContexte == 'cabinet') {
-      $actes = $this->_getActesCabinet();
-    }
-    elseif($this->_selectedContexte == 'visite') {
-      $actes = $this->_getActesVisite();
+    if($this->_mode == 'calcCV') {
 
-      //ajout majoration ECG en visite
-      if(in_array('DEQP003', $this->_actesListes)) $this->addActeCcam('YYYY490');
-    }
-    //ajout des actes CCAM indépendants
-    if(!empty($this->_actesListes)) {
-      $actes = array_merge($actes, $this->_actesListes);
-    }
+      if($this->_selectedContexte == 'cabinet') {
+        $actes = $this->_getActesCabinet();
+      }
+      elseif($this->_selectedContexte == 'visite') {
+        $actes = $this->_getActesVisite();
 
-    if(!empty($actes)) {
-      if($p['config']['administratifSecteurHonoraires']=='1') $tarif='tarifs1'; else $tarif='tarifs2';
-      $dataActes=msSQL::sql2tabKey("select code, label,".$tarif." as tarif,".$tarif." as total,".$tarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM from actes_base where code in ('".implode("','", $actes)."')", 'code');
+        //ajout majoration ECG en visite
+        if(in_array('DEQP003', $this->_actesListes)) $this->addActeCcam('YYYY490');
+      }
+
+      //ajout des actes CCAM indépendants
+      if(!empty($this->_actesListes)) {
+        $actes = array_merge($actes, $this->_actesListes);
+      }
+
+      if(!empty($actes)) {
+        $dataActes=msSQL::sql2tabKey("select code, label,".$tarif." as tarif,".$tarif." as total,".$tarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM from actes_base where code in ('".implode("','", $actes)."')", 'code');
+      }
+      $this->_actesFinaleListe =  array_merge(array_flip($actes), $dataActes);
+
+
+    } elseif ($this->_mode == 'calcSutures') {
+      $this->_actesFinaleListe = $this->_getActesSutures();
+
+      if($this->_selectedContexte == 'visite') $this->_actesFinaleListe['ID']=$this->addActe('ID');
+
     }
 
     //ik
     if($this->_selectedContexte == 'visite' and $this->_ik > 0) {
-      if($p['config']['administratifSecteurIK'] == 'plaine') {
-        $ik = 'IKp';
-        $ab = 4;
-      } elseif($p['config']['administratifSecteurIK'] == 'montagne') {
-        $ik = 'IKm';
-        $ab =2;
-      }
-      $ikValue=msSQL::sqlUniqueChamp("select ".$tarif." from actes_base where code = '".$ik."' limit 1");
-      $dataActes['IK']=array(
-        'code'=>'IK',
-        'ikNombre'=>$this->_ik,
-        'type'=>'NGAP',
-        'base'=>$ikValue,
-        'pourcents'=>'100',
-        'depassement'=>'0',
-        'label'=>'indemnités kilométriques ('.$p['config']['administratifSecteurIK'].')',
-        'tarif'=> $this->_ik * $ikValue,
-        'total'=> $this->_ik * $ikValue
-      );
-      $this->_ikHelpText='soit '.($this->_ik + $ab).'km aller-retour (abat. '.$ab.'km)';
+      $this->_addIK();
     } else {
       $this->_ikHelpText='';
     }
 
-    $this->_tarifFinal=array_sum(array_column($dataActes, 'total'));
+    if(!empty($this->_actesFinaleListe)) {
+      $this->_tarifFinal=array_sum(array_column($this->_actesFinaleListe, 'total'));
+      return $this->_actesFinaleListe;
+    } else {
+      return;
+    }
+  }
 
-    return array_merge(array_flip($actes), $dataActes);
+/**
+ * Ajouter les IK à la facturation finale
+ */
+  private function _addIK() {
+    global $p;
+    if($p['config']['administratifSecteurIK'] == 'plaine') {
+      $ik = 'IKp';
+      $ab = 4;
+    } elseif($p['config']['administratifSecteurIK'] == 'montagne') {
+      $ik = 'IKm';
+      $ab =2;
+    }
+    $ikValue=msSQL::sqlUniqueChamp("select ".$this->_secteurTarif." from actes_base where code = '".$ik."' limit 1");
+    $this->_actesFinaleListe['IK']=array(
+      'code'=>'IK',
+      'ikNombre'=>$this->_ik,
+      'type'=>'NGAP',
+      'base'=>$ikValue,
+      'pourcents'=>'100',
+      'depassement'=>'0',
+      'label'=>'indemnités kilométriques ('.$p['config']['administratifSecteurIK'].')',
+      'tarif'=> $this->_ik * $ikValue,
+      'total'=> $this->_ik * $ikValue
+    );
+    $this->_ikHelpText='soit '.($this->_ik + $ab).'km aller-retour (abat. '.$ab.'km)';
+  }
+
+/**
+ * Obtenir les actes dans le mode calcSutures
+ * @return array liste des actes
+ */
+  private function _getActesSutures() {
+    global $p;
+
+    $hono = new msReglement;
+    $this->_modifsCcamListe = $hono->getModificateursCcam();
+
+    $lccam=array();
+    //plaie sourcil BACA008
+    if ($this->_actesFaits['pSourcil']=='true') {
+    	$lccam['BACA008']='-';
+    }
+    //plaie nez GAJA002
+    if ($this->_actesFaits['pNez']=='true') {
+    	$lccam['GAJA002']='-';
+    }
+    //plaie lèvre HAJA003 / HAJA006
+    if ($this->_actesFaits['pLevre']=='true') {
+    	if ($this->_actesFaits['pLevreTrans']=='n') $lccam['HAJA003']='-';
+    	if ($this->_actesFaits['pLevreTrans']=='o') $lccam['HAJA006']='-';
+    }
+    //plaie auricule CAJA002
+    if ($this->_actesFaits['pAuricule']=='true') {
+    	$lccam['CAJA002']='-';
+    }
+    //plaie superficielle de face QAJA013 / QAJA005 / QAJA002
+    if (is_numeric($this->_actesFaits['pFaceSuper']) and $this->_actesFaits['pFaceSuper']>0) {
+    	if ($this->_actesFaits['pFaceSuper']<3) $lccam['QAJA013']='-';
+    	elseif ($this->_actesFaits['pFaceSuper']<10) $lccam['QAJA005']='-';
+    	elseif ($this->_actesFaits['pFaceSuper']>=10) $lccam['QAJA002']='-';
+    }
+    //plaie profonde de face QAJA004 / QAJA006 / QAJA012
+    if (is_numeric($this->_actesFaits['pFacePro']) and $this->_actesFaits['pFacePro']>0) {
+    	if ($this->_actesFaits['pFacePro']<3) $lccam['QAJA004']='-';
+    	elseif ($this->_actesFaits['pFacePro']<10) $lccam['QAJA006']='-';
+    	elseif ($this->_actesFaits['pFacePro']>=10) $lccam['QAJA012']='-';
+    }
+    //plaie pulpoungueale QZJA022 / QZJA021
+    if ($this->_actesFaits['pPulpoUngu']=='true') {
+    	if ($this->_actesFaits['pPulpoUnguNb']=='u') $lccam['QZJA022']='-';
+    	if ($this->_actesFaits['pPulpoUnguNb']=='m') $lccam['QZJA021']='-';
+    }
+    //plaie superficielle main QZJA002 / QZJA017 / QZJA015 !!!! idem autres zones mais Modificateur à ajouter
+    if (is_numeric($this->_actesFaits['pMainSuper']) and $this->_actesFaits['pMainSuper']>0) {
+    	if ($this->_actesFaits['pMainSuper']<3) { $lccam['QZJA002']='R';}
+    	elseif ($this->_actesFaits['pMainSuper']<10) { $lccam['QZJA017']='R';}
+    	elseif ($this->_actesFaits['pMainSuper']>=10) { $lccam['QZJA015']='R';}
+    }
+
+    //plaie main profonde QCJA001
+    if ($this->_actesFaits['pMainPro']=='true') {
+    	$lccam['QCJA001']='-';
+    }
+
+    //plaie superficielle autres zone QZJA002 / QZJA017 / QZJA015
+    if (is_numeric($this->_actesFaits['pAutreSuper']) and $this->_actesFaits['pAutreSuper']>0) {
+    	if ($this->_actesFaits['pAutreSuper']<3) $lccam['QZJA002']='-';
+    	elseif ($this->_actesFaits['pAutreSuper']<10) $lccam['QZJA017']='-';
+    	elseif ($this->_actesFaits['pAutreSuper']>=10) $lccam['QZJA015']='-';
+    }
+
+    //plaie profonde autres zone QZJA016 / QZJA012 / QZJA001
+    if (is_numeric($this->_actesFaits['pAutrePro']) and $this->_actesFaits['pAutrePro']>0) {
+    	if ($this->_actesFaits['pAutrePro']<3) $lccam['QZJA016']='-';
+    	elseif ($this->_actesFaits['pAutrePro']<10) $lccam['QZJA012']='-';
+    	elseif ($this->_actesFaits['pAutrePro']>=10) $lccam['QZJA001']='-';
+    }
+
+    if($p['config']['administratifSecteurHonoraires']=='1') $tarif='tarifs1'; else $tarif='tarifs2';
+    $dataActes=msSQL::sql2tabKey("select code, label,".$tarif." as tarif,".$tarif." as total,".$tarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM, F, P, S, M, R, D, E, C, U from actes_base where code in ('".implode("','", array_keys($lccam))."') order by ".$tarif." desc", 'code');
+
+    // sélection final des actes
+    if(!empty($lccam)) {
+      // ajouter les modificateur CCAM déjà déterminés à ce stade
+      foreach($lccam as $acte=>$m) {
+        if($m != '-') $dataActes[$acte]['modifsCCAM']=$dataActes[$acte]['modifsCCAM'].$m;
+      }
+
+      // détermination des règles d'asso
+      $this->_reglesAsso = $this->_getCcamRules();
+      // conserver uniquement le nombre d'actes nécessaires et les traiter
+      $this->_actesFinaleListe = array_slice($dataActes, 0, $this->_reglesAsso['nbActes'], TRUE);
+      $i=0;
+      foreach($this->_actesFinaleListe as $acte=>$v) {
+        $this->_traiterActeCcam($acte, $i);
+        $i++;
+      }
+    }
+
+    // si situtaion de viiste urgente en journée
+    if($this->_selectedSituation == 'SituationMU') {
+      $this->_actesFinaleListe['MU']=$this->addActe('MU');
+    }
+
+    return $this->_actesFinaleListe;
 
   }
 
+/**
+ * Obtenir les actes pour consultation au cabinet
+ * @return array tableau actes
+ */
   private function _getActesCabinet() {
     //situations simplex : pédia cabinet
     if($this->_selectedSituation == 'SituationCOE') return ['COE'];
@@ -339,6 +484,10 @@ class msModMedgeCalcHonoraires extends msReglement
     return array_filter($actes);
   }
 
+/**
+ * Obtenir les actes de consultation en visite
+ * @return array actes en visite
+ */
   private function _getActesVisite() {
     //situations simplex
     if($this->_selectedSituation == 'SituationVL') return ['VL'];
@@ -378,8 +527,11 @@ class msModMedgeCalcHonoraires extends msReglement
     return array_filter($actes);
   }
 
+/**
+ * Obtenir les items des menus select
+ * @return string html des <option> des menu select
+ */
   public function getOptionsTagsForMenus() {
-
     $this->_applyRules();
 
     // contexte
@@ -455,24 +607,268 @@ class msModMedgeCalcHonoraires extends msReglement
     );
   }
 
+/**
+ * Appliquer les règles pour obtenir des menus select adéquats
+ * @return void
+ */
+  private function _applyRules() {
+    if($this->_mode == 'calcCV') {
+      //contexte
+      if($this->_selectedContexte == 'cabinet') {
+        $this->_selectedContexte = 'cabinet';
+
+        //situations impossibles
+        $situationsImpossibles=['SituationV', 'SituationVNJ', 'SituationMU', 'SituationVL'];
+        $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, $situationsImpossibles);
+        if(in_array($this->_selectedSituation, $situationsImpossibles)) {
+          $this->_selectedSituation = 'SituationC';
+        }
+
+      } elseif($this->_selectedContexte == 'visite') {
+
+        $this->_selectedContexte = 'visite';
+
+        //situations impossibles
+        $situationsImpossibles=['SituationC', 'SituationMCG', 'SituationAPC', 'SituationMTX', 'SituationCCP','SituationCOE', 'SituationCCP','SituationCSO'];
+        $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, $situationsImpossibles);
+        $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, $situationsImpossibles);
+        if(in_array($this->_selectedSituation, $situationsImpossibles)) {
+          $this->_selectedSituation = 'SituationV';
+        }
+      }
+      // retrait plageAge 0-6 ans si age > 6
+      if($this->_patientAgeInMonths >= 72 ) {
+        $this->_setItemsInvisibled($this->_itemsAgeMenu, ['AgeEnfant']);
+      }
+
+      // certif pédia : désactivation si age > 25 mois
+      if($this->_patientAgeInMonths > 25 ) {
+        $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, ['SituationCOE']);
+      }
+      // consult contraception : désactivation si pas une fille entre 15 et 18 ans
+      if($this->_patientAgeInMonths < 180 or $this->_patientAgeInMonths >= 228 or $this->_patientSexe=='M' ) {
+        $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, ['SituationCCP']);
+      }
+
+      // consult obésité : désactivation si pas entre 3 et 12 ans
+      if($this->_patientAgeInMonths < 36 or $this->_patientAgeInMonths >= 156) {
+        $this->_setItemsInvisibled($this->_itemsSituationPediaMenu, ['SituationCSO']);
+      }
+
+      // correction pour certif pédia obligatoire
+      if($this->_selectedSituation == 'SituationCOE') {
+        $this->_selectedContexte = 'cabinet';
+        $this->_selectedPeriode = 'PeriodeJ';
+      }
+
+      // correction de période si situations incompatibles
+      if(in_array($this->_selectedSituation, ['SituationMCG', 'SituationMRT', 'SituationMUT', 'SituationAPC', 'SituationMSH', 'SituationMIC', 'SituationMTX', 'SituationCOE', 'SituationCCP', 'SituationCSO', 'SituationVL' ])) {
+        $this->_selectedPeriode ='PeriodeJ';
+
+      }
+    }
+
+    elseif($this->_mode == 'calcSutures') {
+      // ajuster les plages horaires suivant qu'on parle en NGAP (garde reg) ou CCAM (autre)
+      if($this->_selectedSituation == "SituationGR") {
+        $this->_itemsPeriodeMenu['PeriodeS']['label']='20h-0h ou 6h-8h';
+        $this->_itemsPeriodeMenu['PeriodeN']['label']='0h-6h';
+      }  else {
+        $this->_itemsPeriodeMenu['PeriodeS']['label']='20h-0h';
+        $this->_itemsPeriodeMenu['PeriodeN']['label']='0h-8h';
+      }
+
+      //situations
+      foreach($this->_itemsSituationAdulteMenu as $kitem=>$item) {
+        if(in_array($kitem, ['SituationMU', 'SituationGR', 'SituationC', 'SituationV'])) {
+          $this->_itemsSituationAdulteMenu[$kitem]['visibled']=true;
+        } else {
+          $this->_itemsSituationAdulteMenu[$kitem]['visibled']=false;
+        }
+      }
+      foreach($this->_itemsSituationPediaMenu as $kitem=>$item) {
+          $this->_itemsSituationPediaMenu[$kitem]['visibled']=false;
+      }
+
+      //contexte
+      if($this->_selectedContexte == 'cabinet') {
+        //situations impossibles
+        $situationsImpossibles=['SituationV', 'SituationMU'];
+        $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, $situationsImpossibles);
+        if(in_array($this->_selectedSituation, $situationsImpossibles)) {
+          $this->_selectedSituation = 'SituationC';
+        }
+
+      } elseif($this->_selectedContexte == 'visite') {
+        //situations impossibles
+        $situationsImpossibles=['SituationC'];
+        $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, $situationsImpossibles);
+        if(in_array($this->_selectedSituation, $situationsImpossibles)) {
+          $this->_selectedSituation = 'SituationV';
+        }
+      }
+
+      // periode
+      if($this->_selectedPeriode != 'PeriodeJ') {
+        $this->_setItemsInvisibled($this->_itemsSituationAdulteMenu, ['SituationMU']);
+      }
+
+    }
+  }
+
+/**
+ * Rendre item(s) d'un menu select invisible
+ * @param array $tab tableau des items du menu
+ * @param array  $items tableau des items à enlever
+ */
   private function _setItemsInvisibled(&$tab, $items=[]) {
     foreach($items as $item) {
         $tab[$item]['visibled']=false;
     }
   }
 
+/**
+ * Rendre disabled item(s) d'un menu select
+ * @param array $tab   tableau des items du menu
+ * @param array  $items items concernés à rendre disabled
+ */
   private function _setItemsDisabled(&$tab, $items=[]) {
     foreach($items as $item) {
         $tab[$item]['disabled']='disabled';
     }
   }
 
-
+/**
+ * Réinitialiser les valeurs d'un tableau d'items de menu select
+ * @param array $tab tableau du menu concerné
+ */
   private function _setTabToInitalState(&$tab) {
     foreach($tab as $item=>$v) {
       $tab[$item]['visibled']=true;
       $tab[$item]['disabled']='';
     }
+  }
+
+/**
+ * Obtenir les règles d'assocoiation d'actes CCAM en fonction du contexte de sutures
+ * @return array règles
+ */
+  private function _getCcamRules() {
+    if ($this->_actesFaits['mcLesions']=='LM') {
+    	$regles=array(
+    		'nbActes'=> 2,
+    		'codes' => array('1', '3'),
+    		'pourcents' => array('100', '75')
+    	);
+    } elseif ($this->_actesFaits['mcLesions']=='LTM') {
+    	$regles=array(
+    		'nbActes'=> 3,
+    		'codes' => array('1', '3', '2'),
+    		'pourcents' => array('100', '75', '50')
+    	);
+    } else {
+    	$regles=array(
+    		'nbActes'=> 2,
+    		'codes' => array('1', '2'),
+    		'pourcents' => array('100', '50')
+    	);
+    }
+    return $regles;
+  }
+
+/**
+ * Traiter un acte CCAM en fonction de son rang de facturation et du contexte
+ * @param  string $acte       code acte
+ * @param  int $rang       rang de l'acte
+ * @return void
+ */
+  private function _traiterActeCcam($acte, $rang) {
+  	$mCCAM=array();
+
+  	//si premier acte,
+  	if ($rang==0) {
+  		//on passe les résidus NGAP si garde régulée
+  		if ($this->_selectedSituation=='SituationGR') {
+  			if ($this->_selectedPeriode=='PeriodeF' and $this->_selectedContexte=='cabinet' ) {$addNGAP='CRD';}
+  			elseif ($this->_selectedPeriode=='PeriodeS' and $this->_selectedContexte=='cabinet') {$addNGAP='CRN';}
+  			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_selectedContexte=='cabinet') {$addNGAP='CRM';}
+  			elseif ($this->_selectedPeriode=='PeriodeF' and $this->_selectedContexte=='visite' ) {$addNGAP='VRD';}
+  			elseif ($this->_selectedPeriode=='PeriodeS' and $this->_selectedContexte=='visite') {$addNGAP='VRN';}
+  			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_selectedContexte=='visite') {$addNGAP='VRM';}
+  			else {$addNGAP=NULL;}
+  			if ($addNGAP) {
+  				$this->_actesFinaleListe[$addNGAP]=$this->addActe($addNGAP);
+  			}
+
+  			//sinon on passe les modifs CCAM si ils sont à true
+  		} else {
+  			if ($this->_selectedPeriode=='PeriodeF' and $this->_actesFinaleListe[$acte]['F']==true) {$mCCAM[]='F';}
+  			elseif ($this->_selectedPeriode=='PeriodeS' and $this->_actesFinaleListe[$acte]['P']==true) {$mCCAM[]='P';}
+  			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_actesFinaleListe[$acte]['S']==true) {$mCCAM[]='S';}
+  			else {$addNGAP=NULL;}
+  		}
+
+  	}
+
+  	//ajout du M si besoin et si possible
+  	if ($this->_selectedContexte=='cabinet' and $this->_actesFinaleListe[$acte]['M']==true and $this->_selectedSituation!='SituationMU') $mCCAM[]='M';
+
+    // ajout modificateurs collectés
+    if(!empty($mCCAM)) {
+      $this->_actesFinaleListe[$acte]['modifsCCAM']=$this->_actesFinaleListe[$acte]['modifsCCAM'].implode('', $mCCAM);
+    }
+
+    // application des règles association
+    if(count($this->_actesFinaleListe) > 1) $this->_actesFinaleListe[$acte]['codeAsso']=$this->_reglesAsso['codes'][$rang];
+    $this->_actesFinaleListe[$acte]['pourcents']=$this->_reglesAsso['pourcents'][$rang];
+
+    /////ajustements induits du tarif :
+
+    //application des modificateur en %
+    if(strlen($this->_actesFinaleListe[$acte]['modifsCCAM']) > 0) {
+      foreach(str_split($this->_actesFinaleListe[$acte]['modifsCCAM']) as $mo) {
+        if($this->_modifsCcamListe[$mo]['tarifUnit']=='pourcent') {
+          $this->_actesFinaleListe[$acte]['tarif'] = $this->_actesFinaleListe[$acte]['tarif'] + $this->_addValueModifCcam($mo, $this->_actesFinaleListe[$acte]['base']);
+        }
+      }
+    }
+
+    //application du % attribué par le code asso
+    $this->_actesFinaleListe[$acte]['tarif']= round(($this->_actesFinaleListe[$acte]['tarif'] * $this->_reglesAsso['pourcents'][$rang] / 100),2);
+
+    //application des modificateur en euro
+    if(strlen($this->_actesFinaleListe[$acte]['modifsCCAM']) > 0) {
+      foreach(str_split($this->_actesFinaleListe[$acte]['modifsCCAM']) as $mo) {
+        if($this->_modifsCcamListe[$mo]['tarifUnit']=='euro') {
+          $this->_actesFinaleListe[$acte]['tarif'] = $this->_actesFinaleListe[$acte]['tarif'] + $this->_addValueModifCcam($mo, $this->_actesFinaleListe[$acte]['tarif']);
+        }
+      }
+    }
+
+    //tarif total ligne
+    $this->_actesFinaleListe[$acte]['total'] = $this->_actesFinaleListe[$acte]['tarif'] + $this->_actesFinaleListe[$acte]['depassement'];
+
+  }
+
+/**
+ * Calculer le montant apporté par un modificateur CCAM sur un acte
+ * @param string $m     modificateur
+ * @param float $value tarif de base de l'acte (si modificateur en %)
+ */
+  private function _addValueModifCcam($m, $value) {
+    if(!isset($this->_modifsCcamListe)) {
+      // liste et propriétés  des modificateurs CCAM
+      $hono = new msReglement;
+      $this->_modifsCcamListe = $hono->getModificateursCcam();
+    }
+
+    if($this->_modifsCcamListe[$m]['tarifUnit'] == 'pourcent') {
+      $rv = round(($this->_modifsCcamListe[$m]['tarifs1'] * $value / 100), 2);
+    } elseif($this->_modifsCcamListe[$m]['tarifUnit'] == 'euro') {
+      $rv = $this->_modifsCcamListe[$m]['tarifs1'];
+    }
+    return $rv;
+
   }
 
 }
