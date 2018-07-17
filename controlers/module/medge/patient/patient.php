@@ -110,13 +110,14 @@ $reglements=$data->getDataTypesFromCatName('porteursReglement', array('id', 'mod
 foreach ($reglements as $v) {
     if ($v['module']=='medge' and (
        ($v['formValues']=='baseReglementS1' and $p['config']['administratifSecteurHonoraires']=='1') or
-       ($v['formValues']=='baseReglementS2' and $p['config']['administratifSecteurHonoraires']=='2'))) {
+       ($v['formValues']=='baseReglementS2' and $p['config']['administratifSecteurHonoraires']=='2') or
+        $v['formValues']=='medGeReglementCalculateur' )) {
         $p['page']['formReglement'][]=$v;
     }
 }
 $ordos=$data->getDataTypesFromCatName('porteursOrdo', array('id', 'module', 'label', 'description', 'formValues'));
 foreach ($ordos as $v) {
-    if ($v['module']=='medge') {
+    if ($v['module']=='medge' or $v['module']=='base') {
       $p['page']['formOrdo'][]=$v;
     }
 }

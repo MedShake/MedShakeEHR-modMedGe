@@ -40,11 +40,6 @@
               <a class="dropdown-item addNewOrdo" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-ordoForm="{{ v.formValues }}" href="#">{% if config.utiliserLap == 'true' %}Autre prescription{% else %}{{ v.label }}{% endif %}</a>
           </li>
         {% endfor %}
-        {% if page.grossesseEnCours > 0 %}
-          <li>
-              <a class="dropdown-item addNewCS" href="#" data-parentID="{{ page.grossesseEnCours.id }}" data-formtocall="{{ page.csMarqueursSeriques.form }}" data-csID="{{ page.csMarqueursSeriques.csID }}" data-mode="create">Marqueurs sériques</a>
-          </li>
-        {% endif %}
       </ul>
     </div>
 
