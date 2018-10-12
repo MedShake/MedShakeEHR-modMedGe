@@ -35,7 +35,7 @@ $(document).ready(function() {
       $('#id_imc_id').val(imc);
     }
 
-    $("#id_poids_id , #id_taillePatient_id").on("keyup", function() {
+    $("#patientLatCol").on("keyup", "#id_poids_id , #id_taillePatient_id", function() {
       poids = $('#id_poids_id').val();
       taille = $('#id_taillePatient_id').val();
       imc = imcCalc(poids, taille);
@@ -52,7 +52,7 @@ $(document).ready(function() {
     auto_grow(this);
   });
 
-  $("#formName_medGeATCD textarea").on("keyup", function() {
+  $("#patientLatCol").on("keyup", "#formName_medGeATCD textarea", function() {
     $(this).css("overflow", "auto");
   });
 
@@ -60,7 +60,7 @@ $(document).ready(function() {
   ///////// Gestion Allergies
 
   // ajout Allergies
-  $("button.getAllergiesPanel").on("click", function(e) {
+  $("#patientLatCol").on("click", "button.getAllergiesPanel", function(e) {
     e.preventDefault();
     $('#texteRechercheAllergie').attr('data-parentid', $(this).attr('data-parentid'));
   });
@@ -129,7 +129,7 @@ $(document).ready(function() {
   });
 
   // retirer allergie
-  $("#latForm").on("click", "button.removeAllergie", function(e) {
+  $("#patientLatCol").on("click", "button.removeAllergie", function(e) {
     e.preventDefault();
     origin = $(this);
     objetid = $(this).attr('data-objetid');
