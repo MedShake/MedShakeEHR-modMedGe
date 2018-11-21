@@ -44,7 +44,7 @@ class msModMedgeObjetPreview extends msModBaseObjetPreview
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-medGeCsVaccination.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
     return $html;
   }
 }
