@@ -27,7 +27,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
 // infos patient
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
@@ -35,8 +34,18 @@ $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName
 $p['page']['patient']['ages']=$patient->getAgeFormats();
 
 ////// définitions pour le formulaire
-$hono = new msModMedgeCalcHonoraires();
+$hono = new msModMedgeReglement();
 $hono->setMode($_POST['mode']);
+if($_POST['regleSecteurHonoraires']) {
+  $hono->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
+} else {
+  $hono->setSecteurTarifaire($p['config']['administratifSecteurHonoraires']);
+}
+if($_POST['regleSecteurGeoTarifaire']) {
+  $hono->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);
+} else {
+  $hono->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+}
 $hono->setPatientAgeInMonths($p['page']['patient']['ages']['ageTotalMonths']);
 $hono->setPatientSexe($p['page']['patient']['administrativeDatas']['administrativeGenderCode']);
 $hono->setContexte($_POST['mcContexte']);

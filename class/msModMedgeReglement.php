@@ -27,10 +27,9 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-class msModMedgeCalcHonoraires extends msReglement
+class msModMedgeReglement extends msReglement
 {
   private $_mode = 'calcCV';
-  private $_secteurTarif = 'tarifs1';
   private $_patientAgeInMonths;
   private $_patientSexe;
   private $_menuContexte;
@@ -260,7 +259,7 @@ class msModMedgeCalcHonoraires extends msReglement
  * @return array tableau data acte
  */
   private function addActe($codeActe) {
-    return msSQL::sqlUnique("select code, label,".$this->_secteurTarif." as tarif,".$this->_secteurTarif." as total,".$this->_secteurTarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM, F, P, S, M, R, D, E, C, U from actes_base where code = '".$codeActe."' ");
+    return $this->_getActesDetails([$codeActe]);
   }
 
 /**
@@ -269,7 +268,6 @@ class msModMedgeCalcHonoraires extends msReglement
  */
   public function getActes() {
     global $p;
-    if($p['config']['administratifSecteurHonoraires']=='1') $tarif='tarifs1'; else $tarif='tarifs2';
 
     if($this->_mode == 'calcCV') {
 
@@ -288,16 +286,14 @@ class msModMedgeCalcHonoraires extends msReglement
         $actes = array_merge($actes, $this->_actesListes);
       }
 
-      if(!empty($actes)) {
-        $dataActes=msSQL::sql2tabKey("select code, label,".$tarif." as tarif,".$tarif." as total,".$tarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM from actes_base where code in ('".implode("','", $actes)."')", 'code');
-      }
+      $dataActes=$this->_getActesDetails($actes);
       $this->_actesFinaleListe =  array_merge(array_flip($actes), $dataActes);
 
 
     } elseif ($this->_mode == 'calcSutures') {
       $this->_actesFinaleListe = $this->_getActesSutures();
 
-      if($this->_selectedContexte == 'visite') $this->_actesFinaleListe['ID']=$this->addActe('ID');
+      if($this->_selectedContexte == 'visite') $this->_actesFinaleListe['ID']=$this->addActe('ID')['ID'];
 
     }
 
@@ -328,7 +324,9 @@ class msModMedgeCalcHonoraires extends msReglement
       $ik = 'IKm';
       $ab =2;
     }
-    $ikValue=msSQL::sqlUniqueChamp("select ".$this->_secteurTarif." from actes_base where code = '".$ik."' limit 1");
+    $ikValue=msSQL::sqlUniqueChamp("select dataYaml from actes_base where code = '".$ik."' limit 1");
+    $ikValue=Spyc::YAMLLoad($ikValue);
+    $ikValue=$ikValue['tarifParZone'][$this->_secteurTarifaireGeo];
     $this->_actesFinaleListe['IK']=array(
       'code'=>'IK',
       'ikNombre'=>$this->_ik,
@@ -414,8 +412,7 @@ class msModMedgeCalcHonoraires extends msReglement
     	elseif ($this->_actesFaits['pAutrePro']>=10) $lccam['QZJA001']='-';
     }
 
-    if($p['config']['administratifSecteurHonoraires']=='1') $tarif='tarifs1'; else $tarif='tarifs2';
-    $dataActes=msSQL::sql2tabKey("select code, label,".$tarif." as tarif,".$tarif." as total,".$tarif." as base, '100' as pourcents, '0' as depassement, type, '' as codeAsso, '' as modifsCCAM, F, P, S, M, R, D, E, C, U from actes_base where code in ('".implode("','", array_keys($lccam))."') order by ".$tarif." desc", 'code');
+    $dataActes=$this->_getActesDetails(array_keys($lccam), 'orderByTarifs');
 
     // sélection final des actes
     if(!empty($lccam)) {
@@ -435,14 +432,67 @@ class msModMedgeCalcHonoraires extends msReglement
       }
     }
 
-    // si situtaion de viiste urgente en journée
+    // si situation de visite urgente en journée
     if($this->_selectedSituation == 'SituationMU') {
-      $this->_actesFinaleListe['MU']=$this->addActe('MU');
+      $this->_actesFinaleListe['MU']=$this->addActe('MU')['MU'];
     }
 
     return $this->_actesFinaleListe;
 
   }
+
+  private function _getActesDetails($actes, $orderBy='') {
+    $dataActes=[];
+
+    if(!empty($actes)) {
+      if($dataActes=msSQL::sql2tabKey("select code, label, dataYaml, type from actes_base where code in ('".implode("','", $actes)."') and type !='mCCAM'", 'code')) {
+        foreach($dataActes as $k=>$v) {
+          $modificateurCCAM=null;
+          $dataYaml=Spyc::YAMLLoad($v['dataYaml']);
+          if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
+            $tarif=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire];
+
+            if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
+              $modificateurCCAM=$dataYaml['modificateursParConventionPs']['CodePs'.$this->_secteurTarifaire];
+            }
+
+          } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
+            if($v['tarifUnit']=='euro') {
+              $tarif=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+            } else {
+              $tarif=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'];
+            }
+          } elseif($v['type']=='NGAP' ) {
+            $tarif=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
+          } elseif($v['type']=='Libre') {
+            $tarif=$dataYaml['tarifBase'];
+          } else {
+            $tarif='';
+          }
+
+          $dataActes[$k]=array(
+            'code'=>$k,
+            'label'=>$v['label'],
+            'tarif'=>$tarif,
+            'total'=>$tarif,
+            'base'=>$tarif,
+            'pourcents'=>100,
+            'depassement'=>0,
+            'type'=>$v['type'],
+            'codeAsso'=>'',
+            'modifsCCAMpossibles'=>$modificateurCCAM,
+            'modifsCCAM'=>''
+          );
+        }
+      }
+    }
+    if(!empty($dataActes) and $orderBy=='orderByTarifs') {
+      msTools::array_unatsort_by('tarif', $dataActes);
+      $dataActes=array_reverse($dataActes);
+    }
+    return $dataActes;
+  }
+
 
 /**
  * Obtenir les actes pour consultation au cabinet
@@ -750,7 +800,7 @@ class msModMedgeCalcHonoraires extends msReglement
   }
 
 /**
- * Obtenir les règles d'assocoiation d'actes CCAM en fonction du contexte de sutures
+ * Obtenir les règles d'association d'actes CCAM en fonction du contexte de sutures
  * @return array règles
  */
   private function _getCcamRules() {
@@ -797,21 +847,21 @@ class msModMedgeCalcHonoraires extends msReglement
   			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_selectedContexte=='visite') {$addNGAP='VRM';}
   			else {$addNGAP=NULL;}
   			if ($addNGAP) {
-  				$this->_actesFinaleListe[$addNGAP]=$this->addActe($addNGAP);
+  				$this->_actesFinaleListe[$addNGAP]=$this->addActe($addNGAP)[$addNGAP];
   			}
 
   			//sinon on passe les modifs CCAM si ils sont à true
   		} else {
-  			if ($this->_selectedPeriode=='PeriodeF' and $this->_actesFinaleListe[$acte]['F']==true) {$mCCAM[]='F';}
-  			elseif ($this->_selectedPeriode=='PeriodeS' and $this->_actesFinaleListe[$acte]['P']==true) {$mCCAM[]='P';}
-  			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_actesFinaleListe[$acte]['S']==true) {$mCCAM[]='S';}
+  			if ($this->_selectedPeriode=='PeriodeF' and in_array('F', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='F';}
+  			elseif ($this->_selectedPeriode=='PeriodeS' and in_array('P', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='P';}
+  			elseif ($this->_selectedPeriode=='PeriodeN' and in_array('S', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='S';}
   			else {$addNGAP=NULL;}
   		}
 
   	}
 
   	//ajout du M si besoin et si possible
-  	if ($this->_selectedContexte=='cabinet' and $this->_actesFinaleListe[$acte]['M']==true and $this->_selectedSituation!='SituationMU') $mCCAM[]='M';
+  	if ($this->_selectedContexte=='cabinet' and in_array('M', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles']) and $this->_selectedSituation!='SituationMU') $mCCAM[]='M';
 
     // ajout modificateurs collectés
     if(!empty($mCCAM)) {
@@ -863,9 +913,9 @@ class msModMedgeCalcHonoraires extends msReglement
     }
 
     if($this->_modifsCcamListe[$m]['tarifUnit'] == 'pourcent') {
-      $rv = round(($this->_modifsCcamListe[$m]['tarifs1'] * $value / 100), 2);
+      $rv = round(($this->_modifsCcamListe[$m]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'] * $value / 100), 2);
     } elseif($this->_modifsCcamListe[$m]['tarifUnit'] == 'euro') {
-      $rv = $this->_modifsCcamListe[$m]['tarifs1'];
+      $rv = $this->_modifsCcamListe[$m]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
     }
     return $rv;
 

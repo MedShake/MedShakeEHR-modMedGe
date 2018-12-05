@@ -83,7 +83,9 @@ function calculerConsultation() {
       mcPeriode: $('#consultation .mcPeriode option:selected').val(),
       mcActesECG: ($('#mcActesECG').is(':checked')) ? true : false,
       mcActesFrottis: ($('#mcActesFrottis').is(':checked')) ? true : false,
-      mcIK: $('#consultation .mcIK').val()
+      mcIK: $('#consultation .mcIK').val(),
+      regleSecteurGeoTarifaire : $("#newReglement input[name='regleSecteurGeoTarifaire']").val(),
+      regleSecteurHonoraires : $("#newReglement input[name='regleSecteurHonoraires']").val(),
     },
     dataType: "json",
     success: function(data) {
@@ -141,7 +143,9 @@ function calculerSuturesCCAM() {
       mcSituation: $('#sutures .mcSituation option:selected').val(),
       mcPeriode: $('#sutures .mcPeriode option:selected').val(),
       mcIK: $('#sutures .mcIK').val(),
-      actesFaits: actesFaits
+      actesFaits: actesFaits,
+      regleSecteurGeoTarifaire : $("#newReglement input[name='regleSecteurGeoTarifaire']").val(),
+      regleSecteurHonoraires : $("#newReglement input[name='regleSecteurHonoraires']").val(),
     },
     dataType: "json",
     success: function(data) {
