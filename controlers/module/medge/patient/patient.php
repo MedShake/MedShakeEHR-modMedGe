@@ -104,17 +104,8 @@ if ($findGro=msSQL::sqlUnique("select pd.id as idGro, eg.id as idFin
     }
 }
 
-//fixer les paramètres pour les formulaires d'ordonnance et de règlement du module
+//fixer les paramètres pour les formulaires d'ordonnance
 $data=new msData;
-$reglements=$data->getDataTypesFromCatName('porteursReglement', array('id', 'module', 'label', 'description', 'formValues'));
-foreach ($reglements as $v) {
-    if ($v['module']=='medge' and (
-       ($v['formValues']=='baseReglementS1' and $p['config']['administratifSecteurHonoraires']=='1') or
-       ($v['formValues']=='baseReglementS2' and $p['config']['administratifSecteurHonoraires']=='2') or
-        $v['formValues']=='medGeReglementCalculateur' )) {
-        $p['page']['formReglement'][]=$v;
-    }
-}
 $ordos=$data->getDataTypesFromCatName('porteursOrdo', array('id', 'module', 'label', 'description', 'formValues'));
 foreach ($ordos as $v) {
     if ($v['module']=='medge' or $v['module']=='base') {
