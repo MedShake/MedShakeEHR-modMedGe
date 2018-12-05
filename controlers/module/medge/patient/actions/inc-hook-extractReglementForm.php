@@ -36,6 +36,8 @@
     $template="medGePatientReglementForm";
 
     $hono = new msModMedgeReglement();
+    $hono->setPatientID($_POST['patientID']);
+
     if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
      $hono->setReglementForm($_POST['reglementForm']);
      $hono->setPorteur($_POST['porteur']);
