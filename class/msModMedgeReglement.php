@@ -450,17 +450,17 @@ class msModMedgeReglement extends msReglement
           $modificateurCCAM=null;
           $dataYaml=Spyc::YAMLLoad($v['dataYaml']);
           if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
-            $tarif=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire];
+            $tarif=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
 
             if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
-              $modificateurCCAM=$dataYaml['modificateursParConventionPs']['CodePs'.$this->_secteurTarifaire];
+              $modificateurCCAM=$dataYaml['modificateursParConventionPs']['CodeGrilleT'.$this->_secteurTarifaire];
             }
 
           } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
             if($v['tarifUnit']=='euro') {
-              $tarif=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+              $tarif=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['forfait'];
             } else {
-              $tarif=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'];
+              $tarif=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'];
             }
           } elseif($v['type']=='NGAP' ) {
             $tarif=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
@@ -913,9 +913,9 @@ class msModMedgeReglement extends msReglement
     }
 
     if($this->_modifsCcamListe[$m]['tarifUnit'] == 'pourcent') {
-      $rv = round(($this->_modifsCcamListe[$m]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'] * $value / 100), 2);
+      $rv = round(($this->_modifsCcamListe[$m]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'] * $value / 100), 2);
     } elseif($this->_modifsCcamListe[$m]['tarifUnit'] == 'euro') {
-      $rv = $this->_modifsCcamListe[$m]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+      $rv = $this->_modifsCcamListe[$m]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['forfait'];
     }
     return $rv;
 
