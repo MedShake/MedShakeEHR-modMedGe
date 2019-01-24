@@ -452,8 +452,8 @@ class msModMedgeReglement extends msReglement
           if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
             $tarif=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
 
-            if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
-              $modificateurCCAM=$dataYaml['modificateursParConventionPs']['CodeGrilleT'.$this->_secteurTarifaire];
+            if(isset($dataYaml['modificateursParGrilleTarifaire']) and !empty($dataYaml['modificateursParGrilleTarifaire'])) {
+              $modificateurCCAM=$dataYaml['modificateursParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
             }
 
           } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
