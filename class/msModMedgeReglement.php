@@ -86,7 +86,8 @@ class msModMedgeReglement extends msReglement
 
   private $_itemsPeriodeMenu=array(
     "PeriodeJ"=>['label'=>'Journée', 'visibled'=>true, 'disabled'=>''],
-    "PeriodeF"=>['label'=>'Samedi AM / Dimanche / Férié', 'visibled'=>true, 'disabled'=>''],
+    "PeriodeSa"=>['label'=>'Samedi après-midi', 'visibled'=>true, 'disabled'=>''],
+    "PeriodeF"=>['label'=>'Dimanche / Férié', 'visibled'=>true, 'disabled'=>''],
     "PeriodeS"=>['label'=>'20h-0h ou 6h-8h', 'visibled'=>true, 'disabled'=>''],
     "PeriodeN"=>['label'=>'0h-6h', 'visibled'=>true, 'disabled'=>''],
   );
@@ -232,7 +233,9 @@ class msModMedgeReglement extends msReglement
       $this->_selectedPeriode = 'PeriodeN';
     } elseif(($H>=20 and $H<=23) or ($H>=6 and $H<=7)) {
       $this->_selectedPeriode = 'PeriodeS';
-    } elseif(($J==6 and $H>=13) or $J==7 ) {
+    } elseif($J==6 and $H>=13) {
+      $this->_selectedPeriode = 'PeriodeSa';
+    } elseif($J==7) {
       $this->_selectedPeriode = 'PeriodeF';
     } else {
       $this->_selectedPeriode = 'PeriodeJ';
@@ -326,7 +329,7 @@ class msModMedgeReglement extends msReglement
     }
     $ikValue=msSQL::sqlUniqueChamp("select dataYaml from actes_base where code = '".$ik."' limit 1");
     $ikValue=Spyc::YAMLLoad($ikValue);
-    $ikValue=$ikValue['tarifParZone'][$this->_secteurTarifaireGeo];
+    $ikValue=$ikValue['tarifParGrilleTarifaire'][$this->_secteurTarifaireNgap][$this->_secteurTarifaireGeo];
     $this->_actesFinaleListe['IK']=array(
       'code'=>'IK',
       'ikNombre'=>$this->_ik,
@@ -443,7 +446,6 @@ class msModMedgeReglement extends msReglement
 
   private function _getActesDetails($actes, $orderBy='') {
     $dataActes=[];
-
     if(!empty($actes)) {
       if($dataActes=msSQL::sql2tabKey("select code, label, dataYaml, type from actes_base where code in ('".implode("','", $actes)."') and type !='mCCAM'", 'code')) {
         foreach($dataActes as $k=>$v) {
@@ -463,13 +465,17 @@ class msModMedgeReglement extends msReglement
               $tarif=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'];
             }
           } elseif($v['type']=='NGAP' ) {
-            $tarif=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
+            if(isset($dataYaml['tarifParZone'][$this->_secteurTarifaireGeo])) {
+              $tarif=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
+            } else {
+              $tarif='';
+            }
           } elseif($v['type']=='Libre') {
             $tarif=$dataYaml['tarifBase'];
           } else {
             $tarif='';
           }
-
+          if(is_numeric($tarif)) $tarif = number_format($tarif, 2, '.', '');
           $dataActes[$k]=array(
             'code'=>$k,
             'label'=>$v['label'],
@@ -522,10 +528,12 @@ class msModMedgeReglement extends msReglement
 
     // période
     if($this->_selectedSituation == 'SituationC') {
+      if($this->_selectedPeriode == 'PeriodeSa') $actes[]='F';
       if($this->_selectedPeriode == 'PeriodeF') $actes[]='F';
       if($this->_selectedPeriode == 'PeriodeS') $actes[]='MN';
       if($this->_selectedPeriode == 'PeriodeN') $actes[]='MM';
     } elseif($this->_selectedSituation == 'SituationGR') {
+      if($this->_selectedPeriode == 'PeriodeSa') $actes[]='CRS';
       if($this->_selectedPeriode == 'PeriodeF') $actes[]='CRD';
       if($this->_selectedPeriode == 'PeriodeS') $actes[]='CRN';
       if($this->_selectedPeriode == 'PeriodeN') $actes[]='CRM';
@@ -556,16 +564,19 @@ class msModMedgeReglement extends msReglement
       $actes[]='MU';
     } elseif($this->_selectedSituation == 'SituationV') {
       if($this->_selectedPeriode == 'PeriodeJ') $actes[]='MD';
+      elseif($this->_selectedPeriode == 'PeriodeSa') $actes[]='MDD';
       elseif($this->_selectedPeriode == 'PeriodeF') $actes[]='MDD';
       elseif($this->_selectedPeriode == 'PeriodeS') $actes[]='MDN';
       elseif($this->_selectedPeriode == 'PeriodeN') $actes[]='MDI';
     } elseif($this->_selectedSituation == 'SituationGR') {
       if($this->_selectedPeriode == 'PeriodeJ') $actes[]='MD';
+      elseif($this->_selectedPeriode == 'PeriodeSa') $actes[]='VRS';
       elseif($this->_selectedPeriode == 'PeriodeF') $actes[]='VRD';
       elseif($this->_selectedPeriode == 'PeriodeS') $actes[]='VRN';
       elseif($this->_selectedPeriode == 'PeriodeN') $actes[]='VRM';
     } elseif($this->_selectedSituation == 'SituationVNJ') {
       if($this->_selectedPeriode == 'PeriodeJ') $actes[]='';
+      elseif($this->_selectedPeriode == 'PeriodeSa') $actes[]='F';
       elseif($this->_selectedPeriode == 'PeriodeF') $actes[]='F';
       elseif($this->_selectedPeriode == 'PeriodeS') $actes[]='MN';
       elseif($this->_selectedPeriode == 'PeriodeN') $actes[]='MM';
@@ -840,8 +851,10 @@ class msModMedgeReglement extends msReglement
   		//on passe les résidus NGAP si garde régulée
   		if ($this->_selectedSituation=='SituationGR') {
   			if ($this->_selectedPeriode=='PeriodeF' and $this->_selectedContexte=='cabinet' ) {$addNGAP='CRD';}
+        elseif ($this->_selectedPeriode=='PeriodeSa' and $this->_selectedContexte=='cabinet' ) {$addNGAP='CRS';}
   			elseif ($this->_selectedPeriode=='PeriodeS' and $this->_selectedContexte=='cabinet') {$addNGAP='CRN';}
   			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_selectedContexte=='cabinet') {$addNGAP='CRM';}
+        elseif ($this->_selectedPeriode=='PeriodeSa' and $this->_selectedContexte=='visite' ) {$addNGAP='VRS';}
   			elseif ($this->_selectedPeriode=='PeriodeF' and $this->_selectedContexte=='visite' ) {$addNGAP='VRD';}
   			elseif ($this->_selectedPeriode=='PeriodeS' and $this->_selectedContexte=='visite') {$addNGAP='VRN';}
   			elseif ($this->_selectedPeriode=='PeriodeN' and $this->_selectedContexte=='visite') {$addNGAP='VRM';}
@@ -853,6 +866,7 @@ class msModMedgeReglement extends msReglement
   			//sinon on passe les modifs CCAM si ils sont à true
   		} else {
   			if ($this->_selectedPeriode=='PeriodeF' and in_array('F', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='F';}
+        elseif ($this->_selectedPeriode=='PeriodeSa' and in_array('F', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='F';}
   			elseif ($this->_selectedPeriode=='PeriodeS' and in_array('P', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='P';}
   			elseif ($this->_selectedPeriode=='PeriodeN' and in_array('S', $this->_actesFinaleListe[$acte]['modifsCCAMpossibles'])) {$mCCAM[]='S';}
   			else {$addNGAP=NULL;}
@@ -896,6 +910,7 @@ class msModMedgeReglement extends msReglement
     }
 
     //tarif total ligne
+    $this->_actesFinaleListe[$acte]['tarif']=round($this->_actesFinaleListe[$acte]['tarif'], 2);
     $this->_actesFinaleListe[$acte]['total'] = $this->_actesFinaleListe[$acte]['tarif'] + $this->_actesFinaleListe[$acte]['depassement'];
 
   }

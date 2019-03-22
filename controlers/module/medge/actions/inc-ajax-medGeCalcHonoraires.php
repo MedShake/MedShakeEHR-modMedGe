@@ -39,7 +39,12 @@ $hono->setMode($_POST['mode']);
 if($_POST['regleSecteurHonoraires']) {
   $hono->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
 } else {
-  $hono->setSecteurTarifaire($p['config']['administratifSecteurHonoraires']);
+  $hono->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
+}
+if($_POST['regleSecteurHonorairesNgap']) {
+  $hono->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
+} else {
+  $hono->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
 }
 if($_POST['regleSecteurGeoTarifaire']) {
   $hono->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);

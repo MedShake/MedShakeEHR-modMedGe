@@ -86,6 +86,7 @@ function calculerConsultation() {
       mcIK: $('#consultation .mcIK').val(),
       regleSecteurGeoTarifaire : $("#newReglement input[name='regleSecteurGeoTarifaire']").val(),
       regleSecteurHonoraires : $("#newReglement input[name='regleSecteurHonoraires']").val(),
+      regleSecteurHonorairesNgap : $("#newReglement input[name='regleSecteurHonorairesNgap']").val(),
     },
     dataType: "json",
     success: function(data) {
@@ -146,6 +147,7 @@ function calculerSuturesCCAM() {
       actesFaits: actesFaits,
       regleSecteurGeoTarifaire : $("#newReglement input[name='regleSecteurGeoTarifaire']").val(),
       regleSecteurHonoraires : $("#newReglement input[name='regleSecteurHonoraires']").val(),
+      regleSecteurHonorairesNgap : $("#newReglement input[name='regleSecteurHonorairesNgap']").val(),
     },
     dataType: "json",
     success: function(data) {
