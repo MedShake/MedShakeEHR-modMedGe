@@ -327,9 +327,9 @@ class msModMedgeReglement extends msReglement
       $ik = 'IKm';
       $ab =2;
     }
-    $ikValue=msSQL::sqlUniqueChamp("select dataYaml from actes_base where code = '".$ik."' limit 1");
+    $ikValue=msSQL::sqlUniqueChamp("select dataYaml from actes_base where code = '".$ik."' and codeProf='".$this->_secteurTarifaireNgap."' limit 1");
     $ikValue=Spyc::YAMLLoad($ikValue);
-    $ikValue=$ikValue['tarifParGrilleTarifaire'][$this->_secteurTarifaireNgap][$this->_secteurTarifaireGeo];
+    $ikValue=$ikValue['tarifParZone'][$this->_secteurTarifaireGeo];
     $this->_actesFinaleListe['IK']=array(
       'code'=>'IK',
       'ikNombre'=>$this->_ik,
