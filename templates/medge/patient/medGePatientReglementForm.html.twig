@@ -319,7 +319,7 @@
                                 {% if val.flagCmu %}background : #EEE; {% endif %}
                                 {% if val.flagImportant %}font-weight : bold; {% endif %}
                                 "
-                              >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ (val.details|keys)|join(' + ') }}</option>
+                              >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ val.syntheseActes }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -355,7 +355,7 @@
         <th class="text-left"></th>
         <th class="col-1 text-left">code asso.</th>
         <th class="col-1 text-center">base</th>
-        <th class="pourcents col-1 text-center">%</th>
+        <th class="pourcents col-1 text-center">quantité</th>
         <th class="col-1 text-center">modif CCAM</th>
         <th class="col-1 text-center"></th>
         <th class="col-1 text-center"></th>
