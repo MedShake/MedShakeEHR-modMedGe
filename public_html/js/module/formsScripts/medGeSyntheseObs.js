@@ -28,11 +28,11 @@
 $(document).ready(function() {
 
   // Ajutement de hauteur pour le textarea principal
-  $("#formName_gynObsSyntheseObs textarea").each(function(index) {
+  $("#formName_medGeSyntheseObs textarea").each(function(index) {
     $(this).css("overflow", "hidden");
     auto_grow(this);
   });
-  $("#formName_gynObsSyntheseObs textarea").on("keyup", function() {
+  $("#formName_medGeSyntheseObs textarea").on("keyup", function() {
     $(this).css("overflow", "auto");
   });
 

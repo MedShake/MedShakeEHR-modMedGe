@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > patient : tableau de gestion synthèse gynéco
+ # Template > patient : tableau de gestion synthèse medge
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
@@ -29,7 +29,7 @@
 <div class="row changeObserv" id="synthesePatiente" style="">
 
     <div class="jumbotron col-md-12">
-        {{ f.formbuilder(page.formSynthese , 'gynObsSyntheseGyn' ) }}
+        {{ f.formbuilder(page.formSynthese , 'medGeSynthesePatient' ) }}
 
         {# consultation #}
         {% if page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears >= 18 %}

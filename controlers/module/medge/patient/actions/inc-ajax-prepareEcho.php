@@ -48,9 +48,9 @@
          $formSyntheseGrossesse->setInstance($p['page']['grossesseEnCours']['id']);
          $p['page']['dataGrossesse']=$formSyntheseGrossesse->getPrevaluesForPatient($_POST['patientID']);
 
-         if (isset($p['page']['dataGrossesse'][$name2typeID['ddgReel']])) {
-             $p['page']['patient']['dicomDDR']=msTools::readableDate2Reverse(msModGynobsCalcMed::ddg2ddr($p['page']['dataGrossesse'][$name2typeID['ddgReel']]));
-         } elseif (isset($p['page']['dataGrossesse'][$name2typeID['DDR']])) {
+         if (isset($p['page']['dataGrossesse'][$name2typeID['ddgReel']]) and strlen($p['page']['dataGrossesse'][$name2typeID['ddgReel']]) == 10) {
+             $p['page']['patient']['dicomDDR']=msTools::readableDate2Reverse(msModMedgeCalcMed::ddg2ddr($p['page']['dataGrossesse'][$name2typeID['ddgReel']]));
+         } elseif (isset($p['page']['dataGrossesse'][$name2typeID['DDR']]) and strlen($p['page']['dataGrossesse'][$name2typeID['DDR']]) == 10) {
              $p['page']['patient']['dicomDDR']=msTools::readableDate2Reverse($p['page']['dataGrossesse'][$name2typeID['DDR']]);
          }
      }
