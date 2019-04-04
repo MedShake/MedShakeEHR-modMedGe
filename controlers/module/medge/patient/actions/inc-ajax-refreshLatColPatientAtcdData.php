@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > ajax : générer la colonne atcd module médecine générale 
+ * Patient > ajax : générer la colonne atcd module médecine générale
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -29,7 +29,7 @@
 
  // le formulaire latéral ATCD
  $formLat = new msForm();
- $p['page']['formNameGynObsATCD']=$formLat->setFormIDbyName('gynObsATCD');
+ $formLat->setFormIDbyName('medGeATCD');
  $formLat->getPrevaluesForPatient($p['page']['patient']['id']);
  $p['page']['formLat']=$formLat->getForm();
 
