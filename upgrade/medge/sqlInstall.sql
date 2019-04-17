@@ -148,7 +148,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('medical', 'medGeCsExamenDuJour', 'examen du jour', 'Examen du jour', 'examen du jour', NULL, NULL, 'textarea', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '0'),
 ('medical', 'medGeCsMotifDuJour', 'motif de consultation', 'Motif de consultation', 'motif de consultation', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '0'),
 ('medical', 'medGeCsConclusionDuJour', 'synthèse / conclusion', 'Synthèse', 'Synthèse / conclusion de la consultation du jour', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '0'),
-('medical', 'medGeExamenObsDuJour', 'examen obstétrical du jour', 'Examen obstétrical du jour', 'examen obstétrical du jour', NULL, NULL, 'textarea', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+('medical', 'medGeExamenObsDuJour', 'examen obstétrical du jour', 'Examen obstétrical du jour', 'examen obstétrical du jour', NULL, NULL, 'textarea', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='medGeCatConsultBaseAdulte');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -631,27 +631,27 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='datasIssueGrossesse');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('medical', 'igLieu', 'lieu de l\'accouchement / fin de grossesse', 'Lieu', 'lieu de l\'accouchement / fin de grossesse', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igDate', NULL, 'Date accouchement', 'date d\'accouchement', NULL, NULL, 'date', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igTermeFA', 'SA', 'Terme - A', 'terme de la grossesse en SA', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'SigSexeFA', NULL, 'Sexe - A', 'sexe du foetus A', NULL, NULL, 'select', '\'F\' : \'féminin\'\n\'M\' : \'masculin\'\n\'A\' : \'ambigu\'\n\'I\' : \'inconnu\'', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igPoidsFA', 'g', 'Poids - A', 'poids du foetus A', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igModaliteFA', NULL, 'Modalité - A', 'modalité de fin de grossesse', NULL, NULL, 'select', '\'A\' : \'Accouchement voie basse\'\n\'B\' : \'Accouchement voie basse (instruments)\'\n\'C\' : \'Césarienne\'\n\'D\' : \'Siège voie basse\'\n\'FCS\' : \'FCS\'\n\'FCT\' : \'FCT\'\n\'ISG\' : \'ISG\'\n\'IVG\' : \'IVG\'\n\'GEU\' : \'GEU\'\n\'MFIU\' : \'MFIU\'\n\'IMG\' : \'IMG\'\n\'Mole\' : \'Mole\'', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igPrenomFA', 'prénom', 'Prénom - A', 'prénom foetus A', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igEtatSanteFA', 'état de santé', 'Etat de santé - A', 'état de santé du foetus A', NULL, NULL, 'text', 'bien portant', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igTermeFB', 'SA', 'Terme - B', 'terme de la grossesse en SA', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'SigSexeFB', NULL, 'Sexe - B', 'sexe du foetus B', NULL, NULL, 'select', '\'F\' : \'féminin\'\n\'M\' : \'masculin\'\n\'A\' : \'ambigu\'\n\'I\' : \'inconnu\'', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igModaliteFB', NULL, 'Modalité - B', 'modalité de fin de grossesse', NULL, NULL, 'select', '\'A\' : \'Accouchement voie basse\'\n\'B\' : \'Accouchement voie basse (instruments)\'\n\'C\' : \'Césarienne\'\n\'D\' : \'Siège voie basse\'\n\'FCS\' : \'FCS\'\n\'FCT\' : \'FCT\'\n\'ISG\' : \'ISG\'\n\'IVG\' : \'IVG\'\n\'GEU\' : \'GEU\'\n\'MFIU\' : \'MFIU\'\n\'IMG\' : \'IMG\'\n\'Mole\' : \'Mole\'', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igPrenomFB', 'prénom', 'Prénom - B', 'prénom foetus B', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igEtatSanteFB', 'état de santé', 'Etat de santé - B', 'état de santé du foetus B', NULL, NULL, 'text', 'bien portant', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igPoidsFB', 'g', 'Poids - B', 'poids du foetus B', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igTermeFC', 'SA', 'Terme - C', 'terme de la grossesse en SA', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'SigSexeFC', NULL, 'Sexe - C', 'sexe du foetus C', NULL, NULL, 'select', '\'F\' : \'féminin\'\n\'M\' : \'masculin\'\n\'A\' : \'ambigu\'\n\'I\' : \'inconnu\'', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igModaliteFC', NULL, 'Modalité - C', 'modalité de fin de grossesse', NULL, NULL, 'select', '\'A\' : \'Accouchement voie basse\'\n\'B\' : \'Accouchement voie basse (instruments)\'\n\'C\' : \'Césarienne\'\n\'D\' : \'Siège voie basse\'\n\'FCS\' : \'FCS\'\n\'FCT\' : \'FCT\'\n\'ISG\' : \'ISG\'\n\'IVG\' : \'IVG\'\n\'GEU\' : \'GEU\'\n\'MFIU\' : \'MFIU\'\n\'IMG\' : \'IMG\'\n\'Mole\' : \'Mole\'', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igPrenomFC', 'prénom', 'Prénom - C', 'prénom foetus C', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igEtatSanteFC', 'état de santé', 'Etat de santé - C', 'état de santé du foetus C', NULL, NULL, 'text', 'bien portant', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igPoidsFC', 'g', 'Poids - C', 'poids du foetus C', NULL, NULL, 'text', NULL, 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('medical', 'igNbFoetus', NULL, 'Nombre de foetus', 'nombre de foetus', NULL, NULL, 'number', '1', 'gynobs', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+('medical', 'igLieu', 'lieu de l\'accouchement / fin de grossesse', 'Lieu', 'lieu de l\'accouchement / fin de grossesse', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igDate', NULL, 'Date accouchement', 'date d\'accouchement', NULL, NULL, 'date', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igTermeFA', 'SA', 'Terme - A', 'terme de la grossesse en SA', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'SigSexeFA', NULL, 'Sexe - A', 'sexe du foetus A', NULL, NULL, 'select', '\'F\' : \'féminin\'\n\'M\' : \'masculin\'\n\'A\' : \'ambigu\'\n\'I\' : \'inconnu\'', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igPoidsFA', 'g', 'Poids - A', 'poids du foetus A', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igModaliteFA', NULL, 'Modalité - A', 'modalité de fin de grossesse', NULL, NULL, 'select', '\'A\' : \'Accouchement voie basse\'\n\'B\' : \'Accouchement voie basse (instruments)\'\n\'C\' : \'Césarienne\'\n\'D\' : \'Siège voie basse\'\n\'FCS\' : \'FCS\'\n\'FCT\' : \'FCT\'\n\'ISG\' : \'ISG\'\n\'IVG\' : \'IVG\'\n\'GEU\' : \'GEU\'\n\'MFIU\' : \'MFIU\'\n\'IMG\' : \'IMG\'\n\'Mole\' : \'Mole\'', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igPrenomFA', 'prénom', 'Prénom - A', 'prénom foetus A', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igEtatSanteFA', 'état de santé', 'Etat de santé - A', 'état de santé du foetus A', NULL, NULL, 'text', 'bien portant', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igTermeFB', 'SA', 'Terme - B', 'terme de la grossesse en SA', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'SigSexeFB', NULL, 'Sexe - B', 'sexe du foetus B', NULL, NULL, 'select', '\'F\' : \'féminin\'\n\'M\' : \'masculin\'\n\'A\' : \'ambigu\'\n\'I\' : \'inconnu\'', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igModaliteFB', NULL, 'Modalité - B', 'modalité de fin de grossesse', NULL, NULL, 'select', '\'A\' : \'Accouchement voie basse\'\n\'B\' : \'Accouchement voie basse (instruments)\'\n\'C\' : \'Césarienne\'\n\'D\' : \'Siège voie basse\'\n\'FCS\' : \'FCS\'\n\'FCT\' : \'FCT\'\n\'ISG\' : \'ISG\'\n\'IVG\' : \'IVG\'\n\'GEU\' : \'GEU\'\n\'MFIU\' : \'MFIU\'\n\'IMG\' : \'IMG\'\n\'Mole\' : \'Mole\'', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igPrenomFB', 'prénom', 'Prénom - B', 'prénom foetus B', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igEtatSanteFB', 'état de santé', 'Etat de santé - B', 'état de santé du foetus B', NULL, NULL, 'text', 'bien portant', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igPoidsFB', 'g', 'Poids - B', 'poids du foetus B', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igTermeFC', 'SA', 'Terme - C', 'terme de la grossesse en SA', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'SigSexeFC', NULL, 'Sexe - C', 'sexe du foetus C', NULL, NULL, 'select', '\'F\' : \'féminin\'\n\'M\' : \'masculin\'\n\'A\' : \'ambigu\'\n\'I\' : \'inconnu\'', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igModaliteFC', NULL, 'Modalité - C', 'modalité de fin de grossesse', NULL, NULL, 'select', '\'A\' : \'Accouchement voie basse\'\n\'B\' : \'Accouchement voie basse (instruments)\'\n\'C\' : \'Césarienne\'\n\'D\' : \'Siège voie basse\'\n\'FCS\' : \'FCS\'\n\'FCT\' : \'FCT\'\n\'ISG\' : \'ISG\'\n\'IVG\' : \'IVG\'\n\'GEU\' : \'GEU\'\n\'MFIU\' : \'MFIU\'\n\'IMG\' : \'IMG\'\n\'Mole\' : \'Mole\'', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igPrenomFC', 'prénom', 'Prénom - C', 'prénom foetus C', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igEtatSanteFC', 'état de santé', 'Etat de santé - C', 'état de santé du foetus C', NULL, NULL, 'text', 'bien portant', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igPoidsFC', 'g', 'Poids - C', 'poids du foetus C', NULL, NULL, 'text', NULL, 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'igNbFoetus', NULL, 'Nombre de foetus', 'nombre de foetus', NULL, NULL, 'number', '1', 'medge', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='porteursReglement');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
