@@ -30,6 +30,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ if(!is_numeric($_POST['patientID'])) die;
+
  //chercher une grossesse en cours
  $typeCsCla=new msData;
  $name2typeID = $typeCsCla->getTypeIDsFromName(['groFermetureSuivi', 'nouvelleGrossesse', 'ddgReel', 'DDR']);
