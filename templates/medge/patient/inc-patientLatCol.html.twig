@@ -33,4 +33,10 @@
  {% endif %}
  <div id="latForm" class="changeObserv">
    {{ f.formbuilder(page.formLat , 'medGeATCD' , valFormLat ) }}
+
+   {% if page.formJavascript.medGeATCD is not empty %}
+     <script>
+       {{ page.formJavascript.medGeATCD }}
+     </script>
+   {% endif %}
  </div>

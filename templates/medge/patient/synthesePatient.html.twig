@@ -63,6 +63,12 @@
         {% if page.grossesseEnCours.id == '' and page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears < 60 and page.patient.administrativeDatas.birthdate.ageFormats.ageTotalYears > 14 and page.patient.administrativeDatas.administrativeGenderCode.value == 'F' %}
             <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/module/actions/installNewGro/{{ page.patient.id }}/" role="button" class="btn btn-info btn-sm float-right m-1 newGro">Nouvelle grossesse</a>
         {% endif %}
+
+        {% if page.formJavascript.medGeSynthesePatient is not empty %}
+          <script>
+            {{ page.formJavascript.medGeSynthesePatient }}
+          </script>
+        {% endif %}
     </div>
 
 </div>

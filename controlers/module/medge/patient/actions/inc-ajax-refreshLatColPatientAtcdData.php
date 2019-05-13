@@ -32,6 +32,7 @@
  $formLat->setFormIDbyName('medGeATCD');
  $formLat->getPrevaluesForPatient($p['page']['patient']['id']);
  $p['page']['formLat']=$formLat->getForm();
+ $p['page']['formJavascript']['medGeATCD']=$formLat->getFormJavascript();
 
  // si LAP activé : allergie et atcd structurés
  if($p['config']['utiliserLap'] == 'true') {

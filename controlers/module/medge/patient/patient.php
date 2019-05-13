@@ -27,14 +27,12 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-// liste des formulaires fixes au 1er affichage dossier patient pour JS
-$p['page']['listeForms']=array('medGeATCD','medGeSynthesePatient');
-
 // le formulaire latéral ATCD
 $formLat = new msForm();
 $formLat->setFormIDbyName('medGeATCD');
 $formLat->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formLat']=$formLat->getForm();
+$p['page']['formJavascript']['medGeATCD']=$formLat->getFormJavascript();
 
 // si LAP activé : allergie et atcd structurés
 if($p['config']['utiliserLap'] == 'true') {
@@ -69,6 +67,7 @@ $formSynthese = new msForm();
 $formSynthese->setFormIDbyName('medGeSynthesePatient');
 $formSynthese->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formSynthese']=$formSynthese->getForm();
+$p['page']['formJavascript']['medGeSynthesePatient']=$formSynthese->getFormJavascript();
 
 //types de consultations classiques.
 $typeCsCla=new msData;
@@ -94,9 +93,7 @@ if ($findGro=msSQL::sqlUnique("select pd.id as idGro, eg.id as idFin
         $formSyntheseGrossesse->setInstance($p['page']['grossesseEnCours']['id']);
         $formSyntheseGrossesse->getPrevaluesForPatient($p['page']['patient']['id']);
         $p['page']['formSyntheseGrossesse']=$formSyntheseGrossesse->getForm();
-
-        // complément à la liste des formulaires fixes au 1er affichage dossier patient pour JS
-        $p['page']['listeForms'][]='medGeSyntheseObs';
+        $p['page']['formJavascript']['medGeSyntheseObs']=$formSyntheseGrossesse->getFormJavascript();
 
         //types de consultation liées à la grossesse.
         $typeCsGro=new msData;

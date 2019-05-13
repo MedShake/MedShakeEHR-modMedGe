@@ -51,5 +51,11 @@
       <button type="button" class="btn btn-info btn-sm addNewCS" style="margin-bottom : 3px;" data-parentid="{{ page.grossesseEnCours.id }}" data-formtocall="{{ v.formValues }}" data-csid="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
     {% endfor %}
 
+    {% if page.formJavascript.medGeSyntheseObs is not empty %}
+      <script>
+        {{ page.formJavascript.medGeSyntheseObs }}
+      </script>
+    {% endif %}
+
   </div>
 </div>
