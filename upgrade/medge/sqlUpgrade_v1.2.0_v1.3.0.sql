@@ -2,10 +2,10 @@
 UPDATE `system` SET `value`='v1.3.0' WHERE `name`='medge';
 
 -- ajustement form pour autosize
-UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'medGeAtcdPersoMedicaux,rows=3', 'medGeAtcdPersoMedicaux,rows=2') where internalName = 'medGeATCD';
-UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'medGeAtcdPersoChirugicaux,rows=3', 'medGeAtcdPersoChirugicaux,rows=2') where internalName = 'medGeATCD';
-UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'medGeAtcdFamiliaux,rows=3', 'medGeAtcdFamiliaux,rows=2') where internalName = 'medGeATCD';
-UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'allergies,rows=3', 'allergies,rows=1') where internalName = 'medGeATCD';
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'medGeAtcdPersoMedicaux,rows=6', 'medGeAtcdPersoMedicaux,rows=2') where internalName = 'medGeATCD';
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'medGeAtcdPersoChirugicaux,rows=6', 'medGeAtcdPersoChirugicaux,rows=2') where internalName = 'medGeATCD';
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'medGeAtcdFamiliaux,rows=6', 'medGeAtcdFamiliaux,rows=2') where internalName = 'medGeATCD';
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'allergies,rows=2', 'allergies,rows=1') where internalName = 'medGeATCD';
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- job', '- job,rows=1') where internalName = 'medGeATCD';
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- toxiques', '- toxiques,rows=1') where internalName = 'medGeATCD';
 
