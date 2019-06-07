@@ -327,7 +327,7 @@ class msModMedgeReglement extends msReglement
       $ik = 'IKm';
       $ab =2;
     }
-    $ikValue=msSQL::sqlUniqueChamp("select dataYaml from actes_base where code = '".$ik."' and codeProf='".$this->_secteurTarifaireNgap."' limit 1");
+    $ikValue=msSQL::sqlUniqueChamp("select dataYaml from actes_base where code = '".$ik."' and codeProf='".msSQL::cleanVar($this->_secteurTarifaireNgap)."' limit 1");
     $ikValue=Spyc::YAMLLoad($ikValue);
     $ikValue=$ikValue['tarifParZone'][$this->_secteurTarifaireGeo];
     $this->_actesFinaleListe['IK']=array(
@@ -447,7 +447,7 @@ class msModMedgeReglement extends msReglement
   private function _getActesDetails($actes, $orderBy='') {
     $dataActes=[];
     if(!empty($actes)) {
-      if($dataActes=msSQL::sql2tabKey("select code, label, dataYaml, type from actes_base where code in ('".implode("','", $actes)."') and type !='mCCAM'", 'code')) {
+      if($dataActes=msSQL::sql2tabKey("select code, label, dataYaml, type from actes_base where code in ('".implode("','", msSQL::cleanArray($actes))."') and type !='mCCAM'", 'code')) {
         foreach($dataActes as $k=>$v) {
           $modificateurCCAM=null;
           $dataYaml=Spyc::YAMLLoad($v['dataYaml']);
