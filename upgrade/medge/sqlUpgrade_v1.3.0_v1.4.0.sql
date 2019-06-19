@@ -13,3 +13,6 @@ UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- taSystolique,plus
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- taDiastolique,plus={mmHg} ', '- taDiastolique,plus={mmHg},class=text-right,donotsaveempty ') where internalName in ('medGeConsultAdulte', 'medGeConsultPedia4A', 'medGeConsultPedia6A', 'medGeConsultPedia8a9A', 'medGeConsultPedia11a13A', 'medGeConsultPedia15a16A', 'medGeConsultPedia');
 
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- freqCardiaque,plus={bpm},class=text-right ', '- freqCardiaque,plus={bpm},class=text-right,donotsaveempty ') where internalName in ('medGeConsultAdulte', 'medGeConsultPedia');
+
+-- correction class fontawesome
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '"fa ', '"fas ');
