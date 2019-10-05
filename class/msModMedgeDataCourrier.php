@@ -69,7 +69,9 @@ class msModMedgeDataCourrier
       $obj->setToID($d['patientID']);
       if($liste=$obj->getListObjetsIdFromName('medGeCsVaccination')) {
         foreach($liste as $id=>$date) {
-          $tab = $obj->getObjetAndSons($id, 'name');
+          $obj2=new msObjet;
+          $obj2->setObjetID($id);
+          $tab = $obj2->getObjetAndSons('name');
           $date = new DateTime($date);
           $rd[]='<li>'.$date->format('d/m/Y').' : <strong>'.$tab['medGeCsDivVaccinationVaccin']['value'].'</strong> (lot : '.$tab['medGeCsDivVaccinationLot']['value'].')</li>';
         }
