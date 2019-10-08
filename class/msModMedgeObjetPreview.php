@@ -26,7 +26,7 @@
  *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
-
+ *
  */
 
 class msModMedgeObjetPreview extends msModBaseObjetPreview
@@ -40,7 +40,8 @@ class msModMedgeObjetPreview extends msModBaseObjetPreview
     global $p;
 
     $data = new msObjet();
-    $p['page']['dataVac'] = $data->getObjetAndSons($this->_objetID, 'name');
+    $data->setObjetID($this->_objetID);
+    $p['page']['dataVac'] = $data->getObjetAndSons('name');
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-medGeCsVaccination.html.twig');
