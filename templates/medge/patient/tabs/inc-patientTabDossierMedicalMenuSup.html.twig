@@ -107,9 +107,11 @@
             <a href="#" class="dropdown-item prepareEcho">
               <i class="fas fa-user-plus fa-fw text-muted mr-1"></i> Envoyer patient à échographe
             </a>
-            <a href="#" class="dropdown-item prepareReceptionDoc dicom">
-              <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i> Envoyer patient à phonecapture
-            </a>
+            {% if config.optionGeActiverPhonecapture == 'true' %}
+              <a href="#" class="dropdown-item prepareReceptionDoc dicom">
+                <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i> Envoyer patient à phonecapture
+              </a>
+            {% endif %}
           </div>
       </div>
 
@@ -125,7 +127,9 @@
       </button>
       <div class="dropdown-menu">
           <a class="dropdown-item linkAddNewDoc" href="#"><i class="fas fa-file-download fa-fw text-muted mr-1"></i> Glisser un document dans le dossier</a>
-          <a class="dropdown-item prepareReceptionDoc" href="#"><i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i> Ajouter un document au dossier via phonecapture</a>
+          {% if config.optionGeActiverPhonecapture == 'true' %}
+            <a class="dropdown-item prepareReceptionDoc" href="#"><i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i> Ajouter un document au dossier via phonecapture</a>
+          {% endif %}
       </div>
     </div>
 
