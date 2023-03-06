@@ -26,4 +26,4 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$delegate = TRUE; 
+$delegate = TRUE;

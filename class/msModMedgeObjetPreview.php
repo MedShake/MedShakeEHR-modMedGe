@@ -32,20 +32,21 @@
 class msModMedgeObjetPreview extends msModBaseObjetPreview
 {
 
-/**
- * Obtenir la preview d'une Vaccination
- * @return string HTML
- */
-  public function getPreviewMedGeCsVaccination() {
-    global $p;
+	/**
+	 * Obtenir la preview d'une Vaccination
+	 * @return string HTML
+	 */
+	public function getPreviewMedGeCsVaccination()
+	{
+		global $p;
 
-    $data = new msObjet();
-    $data->setObjetID($this->_objetID);
-    $p['page']['dataVac'] = $data->getObjetAndSons('name');
+		$data = new msObjet();
+		$data->setObjetID($this->_objetID);
+		$p['page']['dataVac'] = $data->getObjetAndSons('name');
 
-    $html = new msGetHtml;
-    $html->set_template('inc-ajax-medGeCsVaccination.html.twig');
-    $html = $html->genererHtmlVar($p);
-    return $html;
-  }
+		$html = new msGetHtml;
+		$html->set_template('inc-ajax-medGeCsVaccination.html.twig');
+		$html = $html->genererHtmlVar($p);
+		return $html;
+	}
 }

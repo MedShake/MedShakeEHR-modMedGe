@@ -30,26 +30,26 @@
 // infos patient
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
-$p['page']['patient']['ages']=$patient->getAgeFormats();
+$p['page']['patient']['administrativeDatas'] = $patient->getSimpleAdminDatasByName();
+$p['page']['patient']['ages'] = $patient->getAgeFormats();
 
 ////// définitions pour le formulaire
 $hono = new msModMedgeReglement();
 $hono->setMode($_POST['mode']);
-if($_POST['regleSecteurHonoraires']) {
-  $hono->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
+if ($_POST['regleSecteurHonoraires']) {
+	$hono->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
 } else {
-  $hono->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
+	$hono->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
 }
-if($_POST['regleSecteurHonorairesNgap']) {
-  $hono->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
+if ($_POST['regleSecteurHonorairesNgap']) {
+	$hono->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
 } else {
-  $hono->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
+	$hono->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
 }
-if($_POST['regleSecteurGeoTarifaire']) {
-  $hono->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);
+if ($_POST['regleSecteurGeoTarifaire']) {
+	$hono->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);
 } else {
-  $hono->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+	$hono->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
 }
 $hono->setPatientAgeInMonths($p['page']['patient']['ages']['ageTotalMonths']);
 $hono->setPatientSexe($p['page']['patient']['administrativeDatas']['administrativeGenderCode']);
@@ -58,9 +58,9 @@ $hono->setPlageAge($_POST['mcAge']);
 $hono->setSituation($_POST['mcSituation']);
 $hono->setPeriode($_POST['mcPeriode']);
 $hono->setIK($_POST['mcIK']);
-if(isset($_POST['mcActesECG']) and $_POST['mcActesECG'] == 'true') $hono->addActeCcam('DEQP003');
-if(isset($_POST['mcActesFrottis']) and $_POST['mcActesFrottis']=='true') $hono->addActeCcam('JKHD001');
-if(isset($_POST['actesFaits'])) $hono->setActesFaits($_POST['actesFaits']);
+if (isset($_POST['mcActesECG']) and $_POST['mcActesECG'] == 'true') $hono->addActeCcam('DEQP003');
+if (isset($_POST['mcActesFrottis']) and $_POST['mcActesFrottis'] == 'true') $hono->addActeCcam('JKHD001');
+if (isset($_POST['actesFaits'])) $hono->setActesFaits($_POST['actesFaits']);
 $menus = $hono->getOptionsTagsForMenus();
 $menus['details'] = $hono->getActes();
 $menus['tarif'] = $hono->getTarifFinal();

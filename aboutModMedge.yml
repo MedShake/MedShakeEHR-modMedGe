@@ -1,7 +1,7 @@
-nom: 'Médecine générale'
+nom: "Médecine générale"
 auteurs:
-  'Bertrand Boutillier': 'https://www.medshake.net/membre/1/'
-licence: 'GPL v3'
-description: 'Module MedShakeEHR pour la pratique de le médecine générale'
-documentation: 'https://www.logiciel-cabinet-medical.fr/discipline/medecine-generale/'
-sources: 'https://github.com/MedShake/MedShakeEHR-modMedGe'
+  "Bertrand Boutillier": "https://www.medshake.net/membre/1/"
+licence: "GPL v3"
+description: "Module MedShakeEHR pour la pratique de le médecine générale"
+documentation: "https://www.logiciel-cabinet-medical.fr/discipline/medecine-generale/"
+sources: "https://github.com/MedShake/MedShakeEHR-modMedGe"

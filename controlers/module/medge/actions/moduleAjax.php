@@ -28,20 +28,20 @@
 
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'medGeCalcHonoraires', // calculer les honoraires de règlement
+$acceptedModes = array(
+	'medGeCalcHonoraires', // calculer les honoraires de règlement
 );
 
 //inclusion
-$includeFile=$p['homepath'].'controlers/module/medge/actions/inc-ajax-'.$m.'.php';
-if(in_array($m, $acceptedModes) and is_file($includeFile)) {
-    include($includeFile);
+$includeFile = $p['homepath'] . 'controlers/module/medge/actions/inc-ajax-' . $m . '.php';
+if (in_array($m, $acceptedModes) and is_file($includeFile)) {
+	include($includeFile);
 } else {
-    die();
+	die();
 }
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }

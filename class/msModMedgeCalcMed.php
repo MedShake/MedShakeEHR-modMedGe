@@ -22,7 +22,7 @@
 
 /**
  * Calculs médicaux,
- * Module Médecine générale 
+ * Module Médecine générale
  * Le calculs basique sont dans base,
  * accessibles par extension de class
  *
@@ -31,6 +31,4 @@
 
 class msModMedgeCalcMed extends msModBaseCalcMed
 {
-
-
 }
