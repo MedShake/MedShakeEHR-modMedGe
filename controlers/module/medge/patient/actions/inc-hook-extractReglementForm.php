@@ -28,65 +28,63 @@
  */
 
 
- if($hono->getReglementForm()=='baseReglementS1' or $hono->getReglementForm()=='baseReglementS2') {
-    $delegate=TRUE;
+if ($hono->getReglementForm() == 'baseReglementS1' or $hono->getReglementForm() == 'baseReglementS2') {
+	$delegate = TRUE;
+} else {
+	//template
+	$template = "medGePatientReglementForm";
 
- } else {
-    //template
-    $template="medGePatientReglementForm";
+	$hono = new msModMedgeReglement();
+	$hono->setPatientID($_POST['patientID']);
 
-    $hono = new msModMedgeReglement();
-    $hono->setPatientID($_POST['patientID']);
+	if (!isset($_POST['objetID']) or $_POST['objetID'] === '') {
+		$hono->setReglementForm($_POST['reglementForm']);
+		$hono->setPorteur($_POST['porteur']);
+		$hono->setUserID($userID = is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id']);
+		$hono->setModule($_POST['module']);
+	} else {
+		$hono->setObjetID($_POST['objetID']);
+	}
 
-    if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
-     $hono->setReglementForm($_POST['reglementForm']);
-     $hono->setPorteur($_POST['porteur']);
-     $hono->setUserID($userID=is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id']);
-     $hono->setModule($_POST['module']);
-    } else {
-     $hono->setObjetID($_POST['objetID']);
-    }
+	//pour menu de choix de l'acte, par catégories
+	$p['page']['menusActes'] = $hono->getFacturesTypesMenus();
 
-    //pour menu de choix de l'acte, par catégories
-    $p['page']['menusActes']=$hono->getFacturesTypesMenus();
+	//edition : acte choisi :
+	$p['page']['selectedFactureTypeID'] = $hono->getFactureTypeIDFromObjetID();
 
-    //edition : acte choisi :
-    $p['page']['selectedFactureTypeID']=$hono->getFactureTypeIDFromObjetID();
+	// formulaire de base
+	$form = new msForm();
+	$form->setFormIDbyName('baseReglementS1');
+	$form->setTypeForNameInForm('byName');
+	if ($_POST['objetID'] > 0) {
+		$prevalues = $hono->getPreValuesForReglementForm();
+		$form->setPrevalues($prevalues);
+	}
+	$p['page']['form'] = $form->getForm();
+	$form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
+	$p['page']['formIN'] = 'baseReglementS1';
 
-    // formulaire de base
-    $form = new msForm();
-    $form->setFormIDbyName('baseReglementS1');
-    $form->setTypeForNameInForm('byName');
-    if ($_POST['objetID'] > 0) {
-      $prevalues=$hono->getPreValuesForReglementForm();
-      $form->setPrevalues($prevalues);
-    }
-    $p['page']['form']=$form->getForm();
-    $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
-    $p['page']['formIN']='baseReglementS1';
+	// déterminer les secteurs tarifaires
+	$hono->setSecteursTarifaires();
 
-    // déterminer les secteurs tarifaires
-    $hono->setSecteursTarifaires();
+	// champ cachés
+	$hono->setHiddenInputToReglementForm($p['page']['form']);
 
-    // champ cachés
-    $hono->setHiddenInputToReglementForm($p['page']['form']);
+	// infos patient
+	$patient = new msPeople();
+	$patient->setToID($_POST['patientID']);
+	$p['page']['patient']['administrativeDatas'] = $patient->getSimpleAdminDatasByName();
+	$p['page']['patient']['ages'] = $patient->getAgeFormats();
+	$p['page']['patient']['id'] = $_POST['patientID'];
 
-    // infos patient
-    $patient = new msPeople();
-    $patient->setToID($_POST['patientID']);
-    $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
-    $p['page']['patient']['ages']=$patient->getAgeFormats();
-    $p['page']['patient']['id']=$_POST['patientID'];
+	////// définitions pour le formulaire
+	$hono->setContexte('cabinet');
+	$hono->setPatientAgeInMonths($p['page']['patient']['ages']['ageTotalMonths']);
+	$hono->setPatientSexe($p['page']['patient']['administrativeDatas']['administrativeGenderCode']);
+	$hono->automaticRules();
+	$p['page']['formReg']['itemsMenus'] = $hono->getOptionsTagsForMenus();
+	$p['page']['formReg']['actes'] = $hono->getActes();
 
-    ////// définitions pour le formulaire
-    $hono->setContexte('cabinet');
-    $hono->setPatientAgeInMonths($p['page']['patient']['ages']['ageTotalMonths']);
-    $hono->setPatientSexe($p['page']['patient']['administrativeDatas']['administrativeGenderCode']);
-    $hono->automaticRules();
-    $p['page']['formReg']['itemsMenus']=$hono->getOptionsTagsForMenus();
-    $p['page']['formReg']['actes']=$hono->getActes();
-
-    // liste des modificateurs CCAM
-    $p['page']['modifcateursCcam']=$hono->getModificateursCcam();
-
+	// liste des modificateurs CCAM
+	$p['page']['modifcateursCcam'] = $hono->getModificateursCcam();
 }

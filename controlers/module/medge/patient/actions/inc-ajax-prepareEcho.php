@@ -30,32 +30,36 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if(!is_numeric($_POST['patientID'])) die;
+if (!is_numeric($_POST['patientID'])) die;
 
- //chercher une grossesse en cours
- $typeCsCla=new msData;
- $name2typeID = $typeCsCla->getTypeIDsFromName(['groFermetureSuivi', 'nouvelleGrossesse', 'ddgReel', 'DDR']);
+//chercher une grossesse en cours
+$typeCsCla = new msData;
+$name2typeID = $typeCsCla->getTypeIDsFromName(['groFermetureSuivi', 'nouvelleGrossesse', 'ddgReel', 'DDR']);
 
- if ($findGro=msSQL::sqlUnique("select pd.id as idGro, eg.id as idFin
+$marqueurs = [
+	'groFermetureSuivi' => $name2typeID['groFermetureSuivi'],
+	'nouvelleGrossesse' => $name2typeID['nouvelleGrossesse'],
+	'patientID' => $_POST['patientID']
+];
+
+if ($findGro = msSQL::sqlUnique("SELECT pd.id as idGro, eg.id as idFin
    from objets_data as pd
-   left join objets_data as eg on pd.id=eg.instance and eg.typeID='".$name2typeID['groFermetureSuivi']."' and eg.outdated='' and eg.deleted=''
-   where pd.toID='".$_POST['patientID']."' and pd.typeID='".$name2typeID['nouvelleGrossesse']."' and pd.outdated='' and pd.deleted='' order by pd.creationDate desc
-   limit 1")) {
-     if (!$findGro['idFin']) {
-         $p['page']['grossesseEnCours']['id']=$findGro['idGro'];
+   left join objets_data as eg on pd.id=eg.instance and eg.typeID = :groFermetureSuivi and eg.outdated='' and eg.deleted=''
+   where pd.toID = :patientID and pd.typeID = :nouvelleGrossesse and pd.outdated='' and pd.deleted='' order by pd.creationDate desc
+   limit 1", $marqueurs)) {
+	if (!$findGro['idFin']) {
+		$p['page']['grossesseEnCours']['id'] = $findGro['idGro'];
 
-         // générer le formulaire grossesse tête de page.
-         $formSyntheseGrossesse = new msForm();
-         $formSyntheseGrossesse->setFormIDbyName('medGeSyntheseObs');
-         $formSyntheseGrossesse->setInstance($p['page']['grossesseEnCours']['id']);
-         $p['page']['dataGrossesse']=$formSyntheseGrossesse->getPrevaluesForPatient($_POST['patientID']);
+		// générer le formulaire grossesse tête de page.
+		$formSyntheseGrossesse = new msForm();
+		$formSyntheseGrossesse->setFormIDbyName('medGeSyntheseObs');
+		$formSyntheseGrossesse->setInstance($p['page']['grossesseEnCours']['id']);
+		$p['page']['dataGrossesse'] = $formSyntheseGrossesse->getPrevaluesForPatient($_POST['patientID']);
 
-         if (isset($p['page']['dataGrossesse'][$name2typeID['ddgReel']]) and strlen($p['page']['dataGrossesse'][$name2typeID['ddgReel']]) == 10) {
-             $p['page']['patient']['dicomDDR']=msTools::readableDate2Reverse(msModMedgeCalcMed::ddg2ddr($p['page']['dataGrossesse'][$name2typeID['ddgReel']]));
-         } elseif (isset($p['page']['dataGrossesse'][$name2typeID['DDR']]) and strlen($p['page']['dataGrossesse'][$name2typeID['DDR']]) == 10) {
-             $p['page']['patient']['dicomDDR']=msTools::readableDate2Reverse($p['page']['dataGrossesse'][$name2typeID['DDR']]);
-         }
-     }
- }
-
- ?>
+		if (isset($p['page']['dataGrossesse'][$name2typeID['ddgReel']]) and strlen($p['page']['dataGrossesse'][$name2typeID['ddgReel']]) == 10) {
+			$p['page']['patient']['dicomDDR'] = msTools::readableDate2Reverse(msModMedgeCalcMed::ddg2ddr($p['page']['dataGrossesse'][$name2typeID['ddgReel']]));
+		} elseif (isset($p['page']['dataGrossesse'][$name2typeID['DDR']]) and strlen($p['page']['dataGrossesse'][$name2typeID['DDR']]) == 10) {
+			$p['page']['patient']['dicomDDR'] = msTools::readableDate2Reverse($p['page']['dataGrossesse'][$name2typeID['DDR']]);
+		}
+	}
+}

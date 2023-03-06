@@ -31,5 +31,4 @@
 
 class msModMedgeDataSave extends msModBaseDataSave
 {
-
 }

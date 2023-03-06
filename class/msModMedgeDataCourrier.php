@@ -37,78 +37,76 @@
 class msModMedgeDataCourrier
 {
 
-  /**
-   * Extractions complémentaires générales pour getCrData() de msCourrier
-   * @param  array $d         tableau de tags
-   * @return void
-   */
-    public static function getCrDataCompleteModule(&$d) {
+	/**
+	 * Extractions complémentaires générales pour getCrData() de msCourrier
+	 * @param  array $d         tableau de tags
+	 * @return void
+	 */
+	public static function getCrDataCompleteModule(&$d)
+	{
 
-      //atcd du patient (data du formulaire latéral)
-      $atcd = new msCourrier();
-      $atcd = $atcd->getExamenData($d['patientID'], 'medGeATCD', 0);
-      if(is_array($atcd)) {
-        foreach($atcd as $k=>$v) {
-          if(!in_array($k, array_keys($d))) $d[$k]=$v;
-        }
-      }
-      // résoudre le problème de l'IMC
-      unset($d['imc']);
-      if(isset($d['poids'],$d['taillePatient'])) $d['imc']=msModMedgeCalcMed::imc($d['poids'],$d['taillePatient']);
+		//atcd du patient (data du formulaire latéral)
+		$atcd = new msCourrier();
+		$atcd = $atcd->getExamenData($d['patientID'], 'medGeATCD', 0);
+		if (is_array($atcd)) {
+			foreach ($atcd as $k => $v) {
+				if (!in_array($k, array_keys($d))) $d[$k] = $v;
+			}
+		}
+		// résoudre le problème de l'IMC
+		unset($d['imc']);
+		if (isset($d['poids'], $d['taillePatient'])) $d['imc'] = msModMedgeCalcMed::imc($d['poids'], $d['taillePatient']);
+	}
 
-    }
+	/**
+	 * Extraction complémentaire pour le modèle de courrier Résumé des vaccinations
+	 * @param  array $d tableau des tags
+	 * @return void
+	 */
+	public static function getCourrierDataCompleteModuleModele_modeleCourrierResumeVaccinations(&$d)
+	{
+		$obj = new msObjet;
+		$obj->setToID($d['patientID']);
+		if ($liste = $obj->getListObjetsIdFromName('medGeCsVaccination')) {
+			foreach ($liste as $id => $date) {
+				$obj2 = new msObjet;
+				$obj2->setObjetID($id);
+				$tab = $obj2->getObjetAndSons('name');
+				$date = new DateTime($date);
+				$rd[] = '<li>' . $date->format('d/m/Y') . ' : <strong>' . $tab['medGeCsDivVaccinationVaccin']['value'] . '</strong> (lot : ' . $tab['medGeCsDivVaccinationLot']['value'] . ')</li>';
+			}
 
-  /**
-   * Extraction complémentaire pour le modèle de courrier Résumé des vaccinations
-   * @param  array $d tableau des tags
-   * @return void
-   */
-    public static function getCourrierDataCompleteModuleModele_modeleCourrierResumeVaccinations(&$d)
-    {
-      $obj=new msObjet;
-      $obj->setToID($d['patientID']);
-      if($liste=$obj->getListObjetsIdFromName('medGeCsVaccination')) {
-        foreach($liste as $id=>$date) {
-          $obj2=new msObjet;
-          $obj2->setObjetID($id);
-          $tab = $obj2->getObjetAndSons('name');
-          $date = new DateTime($date);
-          $rd[]='<li>'.$date->format('d/m/Y').' : <strong>'.$tab['medGeCsDivVaccinationVaccin']['value'].'</strong> (lot : '.$tab['medGeCsDivVaccinationLot']['value'].')</li>';
-        }
+			$d['listeVaccinations'] = '<ul>' . implode("\n", $rd) . '</ul>';
+		}
+	}
 
-        $d['listeVaccinations']='<ul>'.implode("\n", $rd).'</ul>';
-      }
-    }
+	/**
+	 * Extraction complémentaire pour le modèle de courrier résumé du dossier
+	 * @param  array $d tableau des tags
+	 * @return void
+	 */
+	public static function getCourrierDataCompleteModuleModele_medGeModeleCourrierResumeDossier(&$d)
+	{
+		global $p;
 
-    /**
-     * Extraction complémentaire pour le modèle de courrier résumé du dossier
-     * @param  array $d tableau des tags
-     * @return void
-     */
-      public static function getCourrierDataCompleteModuleModele_medGeModeleCourrierResumeDossier(&$d)
-      {
-        global $p;
+		// extraction des ATCD du formulaire lateral
+		$atcd = new msCourrier();
+		$atcd = $atcd->getExamenData($d['patientID'], 'medGeATCD', 0);
+		if (is_array($atcd)) {
+			$d = $d + $atcd;
+		}
 
-        // extraction des ATCD du formulaire lateral
-        $atcd = new msCourrier();
-        $atcd = $atcd->getExamenData($d['patientID'], 'medGeATCD', 0);
-        if (is_array($atcd)) {
-            $d=$d+$atcd;
-        }
-
-        // si LAP, extraction des donnéés structurées
-        if($p['config']['optionGeActiverLapInterne'] == 'true') {
-          $patient = new msPeople;
-          $patient->setToID($d['patientID']);
-          foreach(explode(',', $p['config']['lapActiverAtcdStrucSur']) as $v) {
-            $d['atcdStruc'][$v]=$patient->getAtcdStruc($v);
-          }
-          foreach(explode(',', $p['config']['lapActiverAllergiesStrucSur']) as $v) {
-            $d['allergiesStruc'][$v]=$patient->getAllergies($v);
-          }
-          $d['ALD']=$patient->getALD();
-        }
-
-      }
-
+		// si LAP, extraction des donnéés structurées
+		if ($p['config']['optionGeActiverLapInterne'] == 'true') {
+			$patient = new msPeople;
+			$patient->setToID($d['patientID']);
+			foreach (explode(',', $p['config']['lapActiverAtcdStrucSur']) as $v) {
+				$d['atcdStruc'][$v] = $patient->getAtcdStruc($v);
+			}
+			foreach (explode(',', $p['config']['lapActiverAllergiesStrucSur']) as $v) {
+				$d['allergiesStruc'][$v] = $patient->getAllergies($v);
+			}
+			$d['ALD'] = $patient->getALD();
+		}
+	}
 }

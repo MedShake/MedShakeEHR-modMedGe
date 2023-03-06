@@ -27,37 +27,37 @@
  */
 
 
- // le formulaire latéral ATCD
- $formLat = new msForm();
- $formLat->setFormIDbyName('medGeATCD');
- $formLat->getPrevaluesForPatient($p['page']['patient']['id']);
- $p['page']['formLat']=$formLat->getForm();
- $p['page']['formJavascript']['medGeATCD']=$formLat->getFormJavascript();
+// le formulaire latéral ATCD
+$formLat = new msForm();
+$formLat->setFormIDbyName('medGeATCD');
+$formLat->getPrevaluesForPatient($p['page']['patient']['id']);
+$p['page']['formLat'] = $formLat->getForm();
+$p['page']['formJavascript']['medGeATCD'] = $formLat->getFormJavascript();
 
- // si LAP activé : allergie et atcd structurés
- if($p['config']['optionGeActiverLapInterne'] == 'true') {
+// si LAP activé : allergie et atcd structurés
+if ($p['config']['optionGeActiverLapInterne'] == 'true') {
 
-     // gestion atcd structurés
-     if(!empty(trim($p['config']['lapActiverAtcdStrucSur']))) {
-       $gethtml=new msGetHtml;
-       $gethtml->set_template('inc-patientAtcdStruc');
-       foreach(explode(',', $p['config']['lapActiverAtcdStrucSur']) as $v) {
-         $p['page']['beforeVar'][$v]=$patient->getAtcdStruc($v);
-         if(empty($p['page']['beforeVar'][$v])) $p['page']['beforeVar'][$v]=array('fake');
-         $p['page']['formLat']['before'][$v]=$gethtml->genererHtmlVar($p['page']['beforeVar'][$v]);
-       }
-       unset($p['page']['beforeVar'], $gethtml);
-     }
+	// gestion atcd structurés
+	if (!empty(trim($p['config']['lapActiverAtcdStrucSur']))) {
+		$gethtml = new msGetHtml;
+		$gethtml->set_template('inc-patientAtcdStruc');
+		foreach (explode(',', $p['config']['lapActiverAtcdStrucSur']) as $v) {
+			$p['page']['beforeVar'][$v] = $patient->getAtcdStruc($v);
+			if (empty($p['page']['beforeVar'][$v])) $p['page']['beforeVar'][$v] = array('fake');
+			$p['page']['formLat']['before'][$v] = $gethtml->genererHtmlVar($p['page']['beforeVar'][$v]);
+		}
+		unset($p['page']['beforeVar'], $gethtml);
+	}
 
-     // gestion allergies structurées
-     if(!empty(trim($p['config']['lapActiverAllergiesStrucSur']))) {
-       $gethtml=new msGetHtml;
-       $gethtml->set_template('inc-patientAllergies');
-       foreach(explode(',', $p['config']['lapActiverAllergiesStrucSur']) as $v) {
-         $p['page']['beforeVar'][$v]=$patient->getAllergies($v);
-         if(empty($p['page']['beforeVar'][$v])) $p['page']['beforeVar'][$v]=array('fake');
-         $p['page']['formLat']['before'][$v]=$gethtml->genererHtmlVar($p['page']['beforeVar'][$v]);
-       }
-       unset($p['page']['beforeVar'], $gethtml);
-     }
- }
+	// gestion allergies structurées
+	if (!empty(trim($p['config']['lapActiverAllergiesStrucSur']))) {
+		$gethtml = new msGetHtml;
+		$gethtml->set_template('inc-patientAllergies');
+		foreach (explode(',', $p['config']['lapActiverAllergiesStrucSur']) as $v) {
+			$p['page']['beforeVar'][$v] = $patient->getAllergies($v);
+			if (empty($p['page']['beforeVar'][$v])) $p['page']['beforeVar'][$v] = array('fake');
+			$p['page']['formLat']['before'][$v] = $gethtml->genererHtmlVar($p['page']['beforeVar'][$v]);
+		}
+		unset($p['page']['beforeVar'], $gethtml);
+	}
+}
